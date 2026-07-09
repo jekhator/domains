@@ -1,0 +1,1 @@
+"""Throttled decorator tests."""

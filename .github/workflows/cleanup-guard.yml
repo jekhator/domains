@@ -1,0 +1,37 @@
+name: Cleanup Guard
+
+on:
+  pull_request
+
+jobs:
+  documentation:
+    name: Verify audit and review documentation
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check documentation completeness
+        run: |
+          set -e
+
+          echo "Checking that audit and review documentation exists..."
+
+          AUDITS_DIR="docs/audits"
+          REVIEWS_DIR="docs/reviews"
+
+          # Check that docs/audits/ has at least one .md file
+          AUDIT_COUNT=$(find "$AUDITS_DIR" -type f -name "*.md" | wc -l)
+          REVIEW_COUNT=$(find "$REVIEWS_DIR" -type f -name "*.md" | wc -l)
+
+          if [ "$AUDIT_COUNT" -eq 0 ]; then
+            echo "ERROR: No audit documentation found in $AUDITS_DIR"
+            exit 1
+          fi
+
+          if [ "$REVIEW_COUNT" -eq 0 ]; then
+            echo "ERROR: No review documentation found in $REVIEWS_DIR"
+            exit 1
+          fi
+
+          echo "✓ Audit and review documentation verified."
+          echo "  Audits: $AUDIT_COUNT file(s)"
+          echo "  Reviews: $REVIEW_COUNT file(s)"
