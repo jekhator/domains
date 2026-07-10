@@ -1,4 +1,4 @@
-# domains
+# domain-suite
 
 Consolidated domain packages for Python services: typed errors, security context, API rate limiting, event monitoring, and cross-cutting aspects.
 
@@ -17,13 +17,13 @@ Each package maintains its namespace and API; the consolidation is organizationa
 ## Installation
 
 ```bash
-uv add domains
+uv add domain-suite
 ```
 
 or with pip:
 
 ```bash
-pip install domains
+pip install domain-suite
 ```
 
 Requires Python 3.11+.

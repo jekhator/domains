@@ -419,7 +419,7 @@ toml = [
 ]
 
 [[package]]
-name = "domains"
+name = "domain-suite"
 source = { editable = "." }
 
 [package.optional-dependencies]
