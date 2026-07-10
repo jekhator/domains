@@ -50,8 +50,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 For detailed changes to individual packages before consolidation, see:
 
-- `docs/errors/CHANGELOG-history.md`
-- `docs/security/CHANGELOG-history.md`
-- `docs/api_limiter/CHANGELOG-history.md`
-- `docs/monitoring/CHANGELOG-history.md`
-- `docs/aspects/CHANGELOG-history.md`
+- `docs/domain_errors/CHANGELOG-history.md`
+- `docs/domain_security/CHANGELOG-history.md`
+- `docs/domain_api_limiter/CHANGELOG-history.md`
+- `docs/domain_monitoring/CHANGELOG-history.md`
+- `docs/domain_aspects/CHANGELOG-history.md`

@@ -68,7 +68,7 @@ def fetch_user(user_id: str):
     pass
 ```
 
-See `docs/errors/` for full documentation.
+See `docs/domain_errors/` for full documentation.
 
 ### domain-security
 
@@ -92,7 +92,7 @@ def admin_only_function():
     return "Admin access granted"
 ```
 
-See `docs/security/` for full documentation.
+See `docs/domain_security/` for full documentation.
 
 ### domain-api-limiter
 
@@ -111,7 +111,7 @@ def create_document(title: str):
     return {"id": "doc_123", "title": title}
 ```
 
-See `docs/api-limiter/` for full documentation.
+See `docs/domain_api_limiter/` for full documentation.
 
 ### domain-monitoring
 
@@ -130,7 +130,7 @@ def process_document(doc_id: str):
     return {"status": "success"}
 ```
 
-See `docs/monitoring/` for full documentation.
+See `docs/domain_monitoring/` for full documentation.
 
 ### domain-aspects
 
@@ -153,7 +153,7 @@ def create_document(title: str, content: str) -> dict:
     return {"id": "doc_123", "title": title}
 ```
 
-See `docs/aspects/` for full documentation.
+See `docs/domain_aspects/` for full documentation.
 
 ## Consolidated From
 

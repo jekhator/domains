@@ -16,20 +16,14 @@ jobs:
           echo "Checking that audit and review documentation exists..."
 
           # Monorepo has five packages with per-package documentation
-          PACKAGES=("errors" "security" "api-limiter" "monitoring" "aspects")
+          PACKAGES=("domain_errors" "domain_security" "domain_api_limiter" "domain_monitoring" "domain_aspects")
           TOTAL_AUDITS=0
           TOTAL_REVIEWS=0
           MISSING_DOCS=""
 
           for pkg in "${PACKAGES[@]}"; do
-            # Map package names to doc directory names
-            case "$pkg" in
-              "api-limiter") doc_dir="api-limiter" ;;
-              *) doc_dir="$pkg" ;;
-            esac
-
-            AUDITS_DIR="docs/$doc_dir/audits"
-            REVIEWS_DIR="docs/$doc_dir/reviews"
+            AUDITS_DIR="docs/$pkg/audits"
+            REVIEWS_DIR="docs/$pkg/reviews"
 
             # Check that docs/<pkg>/audits/ has at least one .md file
             AUDIT_COUNT=$(find "$AUDITS_DIR" -type f -name "*.md" 2>/dev/null | wc -l)

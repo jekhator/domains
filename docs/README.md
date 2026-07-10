@@ -4,45 +4,45 @@ This directory contains comprehensive documentation for all five packages in the
 
 ## Packages
 
-### [domain-errors](errors/)
+### [domain-errors](domain_errors/)
 
 Typed domain error hierarchy with wrapping and chaining for Python services.
 
 - **Key concepts**: DomainError base class, error classification, error chaining, exception wrapping
 - **Use when**: Building typed exception hierarchies, wrapping third-party library exceptions
-- **Documentation**: [errors/README.md](errors/README.md)
+- **Documentation**: [domain_errors/README.md](domain_errors/README.md)
 
-### [domain-security](security/)
+### [domain-security](domain_security/)
 
 Cross-cutting security concerns: authorization, tenancy, secrets, and context management.
 
 - **Key concepts**: Security context, authorization checks, tenant isolation, secret management
 - **Use when**: Enforcing access control, managing multi-tenant boundaries, handling API credentials
-- **Documentation**: [security/README.md](security/README.md)
+- **Documentation**: [domain_security/README.md](domain_security/README.md)
 
-### [domain-api-limiter](api-limiter/)
+### [domain-api-limiter](domain_api_limiter/)
 
 Request rate limiting and quota enforcement for Python services.
 
 - **Key concepts**: Throttle policies, rate limits per tier, quota tracking
 - **Use when**: Protecting APIs from abuse, enforcing tier-based rate limits
-- **Documentation**: [api-limiter/README.md](api-limiter/README.md)
+- **Documentation**: [domain_api_limiter/README.md](domain_api_limiter/README.md)
 
-### [domain-monitoring](monitoring/)
+### [domain-monitoring](domain_monitoring/)
 
 Event monitoring and telemetry for cross-cutting concerns.
 
 - **Key concepts**: Event sinks, metric collection, monitoring registry
 - **Use when**: Tracking performance metrics, collecting domain events, integrating with observability systems
-- **Documentation**: [monitoring/README.md](monitoring/README.md)
+- **Documentation**: [domain_monitoring/README.md](domain_monitoring/README.md)
 
-### [domain-aspects](aspects/)
+### [domain-aspects](domain_aspects/)
 
 Composable decorators for logging, auth, throttling, error wrapping, and sensitivity masking.
 
 - **Key concepts**: Aspect composition, cross-cutting concerns, decorator stacking
 - **Use when**: Applying multiple concerns to a function (logging + auth + throttling), reducing boilerplate
-- **Documentation**: [aspects/README.md](aspects/README.md)
+- **Documentation**: [domain_aspects/README.md](domain_aspects/README.md)
 
 ## Documentation Structure
 

@@ -109,11 +109,11 @@ Declaration-time validation raises AspectDeclarationError when:
 
 Each aspect has an optional extra for its underlying library:
 
-- `[logging]` — mixin-logging
-- `[security]` — domain-security
-- `[throttle]` — domain-api-limiter
-- `[sensitivity]` — mixin-sensitivity
-- `[all]` — all four
+- `[logging]`: mixin-logging
+- `[security]`: domain-security
+- `[throttle]`: domain-api-limiter
+- `[sensitivity]`: mixin-sensitivity
+- `[all]`: all four
 
 Install with:
 
