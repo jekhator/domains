@@ -12,12 +12,12 @@ Security review of domain-aspects package v0.1.0: aspect entry objects, composit
 
 All entry objects validate their fields in `__post_init__`:
 
-- `Logged.event` — non-empty string check.
-- `Requires.permission` — non-empty string check.
-- `TenantScoped.param_name` — non-empty string check.
-- `Throttled.scope`, `rate` — non-empty string checks; tiers must be tuple.
-- `WrapErrors.as_` — must be a type (exception class); catch must be non-empty tuple of exception types.
-- `Sensitive` — no fields to validate.
+- `Logged.event` : non-empty string check.
+- `Requires.permission` : non-empty string check.
+- `TenantScoped.param_name` : non-empty string check.
+- `Throttled.scope`, `rate` : non-empty string checks; tiers must be tuple.
+- `WrapErrors.as_` : must be a type (exception class); catch must be non-empty tuple of exception types.
+- `Sensitive` : no fields to validate.
 
 ### Declaration-Time Validation
 
