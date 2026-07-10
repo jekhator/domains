@@ -1,0 +1,1 @@
+"""Rate-limit error hierarchy."""

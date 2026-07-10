@@ -1,0 +1,57 @@
+name: Cleanup Guard
+
+on:
+  pull_request
+
+jobs:
+  documentation:
+    name: Verify audit and review documentation
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check documentation completeness
+        run: |
+          set -e
+
+          echo "Checking that audit and review documentation exists..."
+
+          # Monorepo has five packages with per-package documentation
+          PACKAGES=("errors" "security" "api-limiter" "monitoring" "aspects")
+          TOTAL_AUDITS=0
+          TOTAL_REVIEWS=0
+          MISSING_DOCS=""
+
+          for pkg in "${PACKAGES[@]}"; do
+            # Map package names to doc directory names
+            case "$pkg" in
+              "api-limiter") doc_dir="api-limiter" ;;
+              *) doc_dir="$pkg" ;;
+            esac
+
+            AUDITS_DIR="docs/$doc_dir/audits"
+            REVIEWS_DIR="docs/$doc_dir/reviews"
+
+            # Check that docs/<pkg>/audits/ has at least one .md file
+            AUDIT_COUNT=$(find "$AUDITS_DIR" -type f -name "*.md" 2>/dev/null | wc -l)
+            REVIEW_COUNT=$(find "$REVIEWS_DIR" -type f -name "*.md" 2>/dev/null | wc -l)
+
+            if [ "$AUDIT_COUNT" -eq 0 ]; then
+              MISSING_DOCS="${MISSING_DOCS}\n  - No audits in $AUDITS_DIR"
+            fi
+
+            if [ "$REVIEW_COUNT" -eq 0 ]; then
+              MISSING_DOCS="${MISSING_DOCS}\n  - No reviews in $REVIEWS_DIR"
+            fi
+
+            TOTAL_AUDITS=$((TOTAL_AUDITS + AUDIT_COUNT))
+            TOTAL_REVIEWS=$((TOTAL_REVIEWS + REVIEW_COUNT))
+          done
+
+          if [ ! -z "$MISSING_DOCS" ]; then
+            echo "ERROR: Missing documentation:$MISSING_DOCS"
+            exit 1
+          fi
+
+          echo "✓ Audit and review documentation verified across all packages."
+          echo "  Total audits: $TOTAL_AUDITS file(s)"
+          echo "  Total reviews: $TOTAL_REVIEWS file(s)"

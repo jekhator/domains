@@ -1,0 +1,53 @@
+"""Typed security error hierarchy for authorization, tenancy, and secret failures."""
+
+from __future__ import annotations
+
+from domain_errors import DomainError
+from domain_security.errors.constants.security_errors import (
+    ERR_AUTHZ_PERMISSION_DENIED,
+    ERR_SECRET_ACCESS_FAILED,
+    ERR_SECURITY_CONSTRAINT_VIOLATED,
+    ERR_SECURITY_DECLARATION_FAILED,
+    ERR_TENANCY_BOUNDARY_VIOLATION,
+)
+
+
+class SecurityError(DomainError):
+    """Base error for all security-domain failures."""
+
+    domain = "security"
+    code = "security_error"
+    http_status = 403
+    retryable = False
+    default_message = ERR_SECURITY_CONSTRAINT_VIOLATED
+
+
+class AuthzError(SecurityError):
+    """Permission denied by authorization policy."""
+
+    code = "authz_denied"
+    default_message = ERR_AUTHZ_PERMISSION_DENIED
+
+
+class TenancyError(SecurityError):
+    """Operation crossed or lacked a tenant boundary."""
+
+    code = "tenant_boundary_violation"
+    default_message = ERR_TENANCY_BOUNDARY_VIOLATION
+
+
+class SecretError(SecurityError):
+    """Secret resolution or access failure."""
+
+    code = "secret_access_failed"
+    http_status = 500
+    default_message = ERR_SECRET_ACCESS_FAILED
+
+
+class SecurityDeclarationError(SecurityError):
+    """Decorator declaration-time validation failure."""
+
+    code = "security_declaration_failed"
+    http_status = 500
+    retryable = False
+    default_message = ERR_SECURITY_DECLARATION_FAILED
