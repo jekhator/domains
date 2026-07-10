@@ -3,7 +3,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "domains"
+name = "domain-suite"
 dynamic = ["version"]
 description = "Consolidated domain packages: typed errors, security, API rate limiting, monitoring, and cross-cutting aspects"
 readme = "README.md"
@@ -23,10 +23,10 @@ classifiers = [
 keywords = ["domains", "errors", "security", "rate-limiting", "monitoring", "aspects"]
 
 [project.urls]
-Homepage = "https://pypi.org/project/domains/"
-Repository = "https://github.com/jekhator/domains"
-Issues = "https://github.com/jekhator/domains/issues"
-Changelog = "https://github.com/jekhator/domains/blob/main/CHANGELOG.md"
+Homepage = "https://pypi.org/project/domain-suite/"
+Repository = "https://github.com/jekhator/domain-suite"
+Issues = "https://github.com/jekhator/domain-suite/issues"
+Changelog = "https://github.com/jekhator/domain-suite/blob/main/CHANGELOG.md"
 
 [tool.hatch.version]
 path = "domain_errors/config/_version.py"
