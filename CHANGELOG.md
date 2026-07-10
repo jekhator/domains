@@ -24,7 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - `ci.yml`: Full test suite with coverage reporting
   - `cleanup-guard.yml`: Directory structure validation
   - `dto-strict.yml`: Per-package DTO validation and line-count gatekeeping
-  - `no-ai-attribution.yml`: Attribution verification (zero Claude markers in commits/PRs)
+  - `no-ai-attribution.yml`: Attribution verification (blocks AI-assistant attribution markers in commits and PRs)
   - `publish.yml`: PyPI publication via trusted publishers (gated by James)
   - `ruff.yml`: Linting and formatting checks
 

@@ -7,7 +7,7 @@ Request rate limiting and quota enforcement for Python services.
 `domain-api-limiter` provides:
 
 - **Throttle policies**: Declarative rate-limit definitions (e.g., 100 requests/hour)
-- **Tier-based rate limits**: Different limits per pricing or usage tier
+- **Tier-based rate limits**: Different limits per caller or usage tier
 - **Quota enforcement**: Decorator-based throttle application
 - **Flexible backends**: Pluggable storage (in-memory, Redis, etc.)
 
@@ -81,11 +81,11 @@ policy = ThrottlePolicy(
 policy_registry.add_policy("api.documents", policy)
 ```
 
-### Per-Customer Rate Limiting
+### Per-Tenant Rate Limiting
 
 ```python
-@throttled(scope="api.documents.{customer_id}", rate="100/hour")
-def create_document(customer_id: str, title: str):
+@throttled(scope="api.documents.{tenant_id}", rate="100/hour")
+def create_document(tenant_id: str, title: str):
     return {"id": "doc_123", "title": title}
 ```
 

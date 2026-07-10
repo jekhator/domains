@@ -135,15 +135,15 @@ class TestRealDepsIntegration:
         """TenantScoped calls tenant_scoped(param_name) correctly."""
         from domain_security.errors.security_errors import TenancyError
 
-        @aspects(objs.TenantScoped(param_name="customer_id"))
+        @aspects(objs.TenantScoped(param_name="tenant_id"))
         @dataclass(frozen=True, slots=True)
         class Service:
-            def tenant_method(self, customer_id: str) -> str:
-                return f"tenant:{customer_id}"
+            def tenant_method(self, tenant_id: str) -> str:
+                return f"tenant:{tenant_id}"
 
         service = Service()
         with pytest.raises(TenancyError):
-            service.tenant_method(customer_id="test")
+            service.tenant_method(tenant_id="test")
 
     def test_sensitive_real_sig_repr_masking(self) -> None:
         """Sensitive applies mixin-sensitivity repr masking to class."""
