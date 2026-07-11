@@ -161,3 +161,33 @@ class TestRealDepsIntegration:
         creds_repr = repr(creds)
         assert "secret123" not in creds_repr
         assert "alice" in creds_repr
+
+    def test_monitored_real_sig(self) -> None:
+        """Monitored calls monitored(event, sink) correctly via real dependency."""
+
+        @aspects(objs.Monitored(event="test.operation"))
+        @dataclass(frozen=True, slots=True)
+        class Service:
+            def process(self) -> str:
+                return "monitored"
+
+        service = Service()
+        result = service.process()
+        assert result == "monitored"
+
+    def test_monitored_with_logged_composition(self) -> None:
+        """Monitored and Logged compose together without conflict."""
+        from mixin_logging import LoggingMixin
+
+        @aspects(
+            objs.Logged(event="test.event"),
+            objs.Monitored(event="test.operation"),
+        )
+        @dataclass(frozen=True, slots=True)
+        class Service(LoggingMixin):
+            def process(self) -> str:
+                return "composed"
+
+        service = Service()
+        result = service.process()
+        assert result == "composed"

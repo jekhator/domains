@@ -144,17 +144,19 @@ class TestAspectsSort:
         requires = objs.Requires(permission="read")
         tenant = objs.TenantScoped(param_name="tenant_id")
         throttled = objs.Throttled(scope="api", rate="100/hour")
+        monitored = objs.Monitored(event="test.operation")
         wrap = objs.WrapErrors(as_=ValueError)
         sensitive = objs.Sensitive()
-        entries = [wrap, logged, sensitive, requires, tenant, throttled]
+        entries = [wrap, logged, sensitive, requires, tenant, throttled, monitored]
         result = aspects_svc._sort(entries)  # type: ignore[arg-type]
-        assert len(result) == 6
+        assert len(result) == 7
         kinds = [e.kind for e in result]
         assert kinds == [
             objs.AspectKind.LOGGED,
             objs.AspectKind.REQUIRES,
             objs.AspectKind.TENANT_SCOPED,
             objs.AspectKind.THROTTLED,
+            objs.AspectKind.MONITORED,
             objs.AspectKind.SENSITIVE,
             objs.AspectKind.WRAP_ERRORS,
         ]
@@ -237,6 +239,25 @@ class TestAspectsCall:
         decorator = aspects_svc(objs.Sensitive())
         decorated = decorator(ExampleClass)
         assert decorated is ExampleClass
+
+    def test_monitored_composition_with_logged(self) -> None:
+        """Composition of Monitored and Logged aspects works."""
+        aspects_svc = client_module.Aspects()
+        decorator = aspects_svc(
+            objs.Monitored(event="test.operation"),
+            objs.Logged(event="test.logging"),
+        )
+        assert callable(decorator)
+
+    def test_monitored_composition_with_multiple_aspects(self) -> None:
+        """Composition of Monitored with multiple aspects works."""
+        aspects_svc = client_module.Aspects()
+        decorator = aspects_svc(
+            objs.Logged(event="test"),
+            objs.Monitored(event="test.operation"),
+            objs.WrapErrors(as_=ValueError),
+        )
+        assert callable(decorator)
 
 
 class TestModuleLevelEntrypoint:

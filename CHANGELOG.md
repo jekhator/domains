@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- **domain-aspects**: Monitored aspect entry composing `domain-monitoring` decorator into the aspect container. Follows suite-wide class-capable standard with target-polymorphic decoration, class fan-out over public own methods, root+method-name derivation, override=replace via marker attribute, and frozenset consts for container config. Includes unit and REAL-dependency integration tests with composition test for stacking with other aspects.
+
 ## [0.1.1] - 2026-07-11
 
 ### Fixed
@@ -29,7 +33,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Unified CI/CD**: Single `.github/workflows/` with six shared workflows:
   - `ci.yml`: Full test suite with coverage reporting
   - `cleanup-guard.yml`: Directory structure validation
-  - `dto-strict.yml`: Per-package DTO validation and line-count gatekeeping
+  - `strict-module.yml`: Per-package DTO validation and line-count gatekeeping
   - `no-ai-attribution.yml`: Attribution verification (blocks AI-assistant attribution markers in commits and PRs)
   - `publish.yml`: PyPI publication via trusted publishers (gated by James)
   - `ruff.yml`: Linting and formatting checks
