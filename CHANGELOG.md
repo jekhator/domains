@@ -48,6 +48,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- **domain-errors**: Renamed `DEFAULT_MESSAGE` constant to `ERR_DOMAIN_UNSPECIFIED` in `domain_errors/domains/constants/domain_error.py` for naming uniformity with the ERR_<DOMAIN>_<CONDITION> convention used across domain packages.
 - **Package structure**: No API changes to any package; purely organizational consolidation.
 
 ### Internal

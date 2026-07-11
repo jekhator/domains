@@ -8,7 +8,7 @@ __all__ = [
     "DEFAULT_CODE",
     "DEFAULT_DOMAIN",
     "DEFAULT_HTTP_STATUS",
-    "DEFAULT_MESSAGE",
+    "ERR_DOMAIN_UNSPECIFIED",
 ]
 
 
@@ -17,4 +17,4 @@ __all__ = [
 DEFAULT_CODE: Final = "domain_error"
 DEFAULT_DOMAIN: Final = "application"
 DEFAULT_HTTP_STATUS: Final = 500
-DEFAULT_MESSAGE: Final = "An unspecified domain error occurred."
+ERR_DOMAIN_UNSPECIFIED: Final = "An unspecified domain error occurred."
