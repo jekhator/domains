@@ -116,11 +116,11 @@ Each aspect has an optional extra for its underlying library:
 - `[sensitivity]` : mixin-sensitivity
 - `[all]` : all four
 ||||||| 4d36750:docs/aspects/apps/aspects/aspects.md
-- `[logging]` — mixin-logging
-- `[security]` — domain-security
-- `[throttle]` — domain-api-limiter
-- `[sensitivity]` — mixin-sensitivity
-- `[all]` — all four
+- `[logging]`: mixin-logging
+- `[security]`: domain-security
+- `[throttle]`: domain-api-limiter
+- `[sensitivity]`: mixin-sensitivity
+- `[all]`: all four
 =======
 - `[logging]`: mixin-logging
 - `[security]`: domain-security
