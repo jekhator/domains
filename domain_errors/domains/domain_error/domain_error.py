@@ -12,7 +12,7 @@ class DomainError(Exception):
     domain: str = const.DEFAULT_DOMAIN
 
     http_status: int = const.DEFAULT_HTTP_STATUS
-    default_message: str = const.DEFAULT_MESSAGE
+    default_message: str = const.ERR_DOMAIN_UNSPECIFIED
     retryable: bool = False
 
     def __init__(self, message: str | None = None, **context: object) -> None:
