@@ -164,6 +164,7 @@ class TestRealDepsIntegration:
 
     def test_monitored_real_sig(self) -> None:
         """Monitored calls monitored(event, sink) correctly via real dependency."""
+
         @aspects(objs.Monitored(event="test.operation"))
         @dataclass(frozen=True, slots=True)
         class Service:

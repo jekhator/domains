@@ -5,10 +5,10 @@ from __future__ import annotations
 from collections.abc import Callable
 from dataclasses import dataclass
 from enum import StrEnum
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Optional
 
 if TYPE_CHECKING:
-    pass
+    from domain_monitoring.services.metrics.metrics_client import MetricSink
 
 
 class AspectKind(StrEnum):
@@ -165,7 +165,7 @@ class Monitored:
     """Metric emission via domain-monitoring."""
 
     event: str
-    sink: object = None
+    sink: Optional[MetricSink] = None
 
     def __post_init__(self) -> None:
         if not self.event or not isinstance(self.event, str):
@@ -211,12 +211,6 @@ class Sensitive:
 
 
 AspectEntry = (
-    Logged
-    | Requires
-    | TenantScoped
-    | Throttled
-    | Monitored
-    | WrapErrors
-    | Sensitive
+    Logged | Requires | TenantScoped | Throttled | Monitored | WrapErrors | Sensitive
 )
 """Union type alias for all aspect entry types."""

@@ -142,7 +142,7 @@ class TestMonitored:
     def test_monitored_creation_with_sink(self) -> None:
         """Create Monitored with custom sink."""
         sink = object()
-        entry = objs.Monitored(event="document.classify", sink=sink)
+        entry = objs.Monitored(event="document.classify", sink=sink)  # type: ignore[arg-type]
         assert entry.event == "document.classify"
         assert entry.sink is sink
 
