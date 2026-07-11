@@ -3,9 +3,9 @@
 Consolidated domain packages for Python services: typed errors, security context, API rate limiting, event monitoring, and cross-cutting aspects.
 
 [![PyPI](https://img.shields.io/pypi/v/domain-suite.svg)](https://pypi.org/project/domain-suite/)
-[![Python versions](https://img.shields.io/pypi/pyversions/domain-suite.svg)](https://pypi.org/project/domain-suite/)
-[![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](LICENSE)
 [![CI](https://github.com/jekhator/domain-suite/workflows/CI/badge.svg)](https://github.com/jekhator/domain-suite/actions)
+[![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](LICENSE)
+[![Python versions](https://img.shields.io/pypi/pyversions/domain-suite.svg)](https://pypi.org/project/domain-suite/)
 
 ## Overview
 
@@ -180,7 +180,7 @@ uv sync --all-extras
 Run tests:
 
 ```bash
-pytest
+uv run pytest
 ```
 
 Run linting and type checking:
