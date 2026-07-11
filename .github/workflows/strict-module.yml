@@ -1,4 +1,4 @@
-name: dto-strict
+name: strict-module
 
 # DTO-discipline lint (frozen+slots, facade-ban, R001-R006). Per-repo copy of
 # the qhcg canonical gate; runs on the root-layout package. Empty baseline at
@@ -26,7 +26,7 @@ jobs:
           enable-cache: true
       - name: Install Python 3.12
         run: uv python install 3.12
-      - name: Run dto-strict
-        run: uvx --python 3.12 dto-strict@0.3.0 domain_aspects/ --format github
+      - name: Run strict-module
+        run: uvx --python 3.12 --from strict-suite==0.1.0 strict-module domain_aspects/ --format github
       - name: Check LOC cap
-        run: uvx --python 3.12 dto-strict@0.3.0 loc-cap domain_aspects/
+        run: uvx --python 3.12 --from strict-suite==0.1.0 strict-module loc-cap domain_aspects/

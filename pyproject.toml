@@ -73,11 +73,11 @@ known-first-party = ["domain_errors", "domain_security", "domain_api_limiter", "
 [tool.ruff.lint.flake8-tidy-imports]
 ban-relative-imports = "all"
 
-[tool.dto-strict]
+[tool.strict-module]
 paths = ["domain_errors/", "domain_security/", "domain_api_limiter/", "domain_monitoring/", "domain_aspects/"]
 exception_tags = ["fixture"]
 
-[tool.dto-strict.loc-cap]
+[tool.strict-module.loc-cap]
 hard_cap = 300
 soft_target = 200
 

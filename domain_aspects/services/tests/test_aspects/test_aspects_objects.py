@@ -129,6 +129,48 @@ class TestThrottled:
         assert hash(entry1) == hash(entry2)
 
 
+class TestMonitored:
+    """Test Monitored entry object."""
+
+    def test_monitored_creation_happy_path(self) -> None:
+        """Create Monitored with valid event."""
+        entry = objs.Monitored(event="document.classify")
+        assert entry.event == "document.classify"
+        assert entry.sink is None
+        assert entry.kind == objs.AspectKind.MONITORED
+
+    def test_monitored_creation_with_sink(self) -> None:
+        """Create Monitored with custom sink."""
+        sink = object()
+        entry = objs.Monitored(event="document.classify", sink=sink)  # type: ignore[arg-type]
+        assert entry.event == "document.classify"
+        assert entry.sink is sink
+
+    def test_monitored_empty_event_raises(self) -> None:
+        """Monitored with empty event raises ValueError."""
+        with pytest.raises(ValueError, match="non-empty string"):
+            objs.Monitored(event="")
+
+    def test_monitored_non_string_event_raises(self) -> None:
+        """Monitored with non-string event raises ValueError."""
+        with pytest.raises(ValueError, match="non-empty string"):
+            objs.Monitored(event=None)  # type: ignore
+
+    def test_monitored_is_frozen(self) -> None:
+        """Monitored is frozen dataclass."""
+        entry = objs.Monitored(event="test")
+        with pytest.raises(AttributeError):
+            entry.event = "modified"  # type: ignore
+
+    def test_monitored_hashable(self) -> None:
+        """Monitored is hashable for frozenset membership."""
+        entry1 = objs.Monitored(event="document.classify")
+        entry2 = objs.Monitored(event="document.classify")
+        entry3 = objs.Monitored(event="document.extract")
+        assert hash(entry1) == hash(entry2)
+        assert hash(entry1) != hash(entry3)
+
+
 class TestWrapErrors:
     """Test WrapErrors entry object."""
 
@@ -188,6 +230,7 @@ class TestAspectKindEnum:
         assert objs.AspectKind.REQUIRES == "REQUIRES"
         assert objs.AspectKind.TENANT_SCOPED == "TENANT_SCOPED"
         assert objs.AspectKind.THROTTLED == "THROTTLED"
+        assert objs.AspectKind.MONITORED == "MONITORED"
         assert objs.AspectKind.WRAP_ERRORS == "WRAP_ERRORS"
         assert objs.AspectKind.SENSITIVE == "SENSITIVE"
 
@@ -201,6 +244,7 @@ class TestEntryHashability:
         stub_requires: objs.Requires,
         stub_tenant_scoped: objs.TenantScoped,
         stub_throttled: objs.Throttled,
+        stub_monitored: objs.Monitored,
         stub_wrap_errors: objs.WrapErrors,
         stub_sensitive: objs.Sensitive,
     ) -> None:
@@ -211,11 +255,12 @@ class TestEntryHashability:
                 stub_requires,
                 stub_tenant_scoped,
                 stub_throttled,
+                stub_monitored,
                 stub_wrap_errors,
                 stub_sensitive,
             }
         )
-        assert len(entry_set) == 6
+        assert len(entry_set) == 7
 
     def test_entries_can_be_dict_keys(self) -> None:
         """All entries can be dict keys."""
