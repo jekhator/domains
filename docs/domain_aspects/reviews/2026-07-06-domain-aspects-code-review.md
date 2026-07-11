@@ -35,7 +35,7 @@ Code review of domain-aspects package v0.1.0: structure, patterns, test coverage
 - **Docstrings**: One-line on all classes and public methods.
 - **Error messages as constants**: Yes, ERR_* constants in both services/constants/ and errors/constants/.
 - **Pre-commit hooks**: Configured via workflows.
-- **Attribution**: No Claude/Anthropic attribution in code or commits.
+- **Attribution**: No AI-assistant attribution markers in code or commits.
 - **Type hints**: Full coverage, TYPE_CHECKING imports for forward refs.
 
 ## Findings
