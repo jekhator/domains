@@ -23,6 +23,7 @@ ASPECT_ORDER: Final = (
     "REQUIRES",
     "TENANT_SCOPED",
     "THROTTLED",
+    "MONITORED",
     "SENSITIVE",
     "WRAP_ERRORS",
 )

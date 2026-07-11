@@ -67,6 +67,7 @@ class Aspects:
                     objs.Requires,
                     objs.TenantScoped,
                     objs.Throttled,
+                    objs.Monitored,
                     objs.WrapErrors,
                     objs.Sensitive,
                 ),

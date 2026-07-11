@@ -18,6 +18,7 @@ class AspectKind(StrEnum):
     REQUIRES = "REQUIRES"
     TENANT_SCOPED = "TENANT_SCOPED"
     THROTTLED = "THROTTLED"
+    MONITORED = "MONITORED"
     WRAP_ERRORS = "WRAP_ERRORS"
     SENSITIVE = "SENSITIVE"
 
@@ -160,6 +161,34 @@ class WrapErrors:
 
 
 @dataclass(frozen=True, slots=True)
+class Monitored:
+    """Metric emission via domain-monitoring."""
+
+    event: str
+    sink: object = None
+
+    def __post_init__(self) -> None:
+        if not self.event or not isinstance(self.event, str):
+            raise ValueError("Monitored.event must be a non-empty string.")
+
+    @property
+    def kind(self) -> AspectKind:
+        return AspectKind.MONITORED
+
+    def build(self) -> Callable:
+        """Lazily import and apply monitored decorator."""
+        try:
+            from domain_monitoring.decorators.monitored.monitored_client import (
+                monitored,
+            )
+        except ImportError as e:
+            raise ImportError(
+                "domain-monitoring not installed; it is a hard dependency."
+            ) from e
+        return monitored(self.event, sink=self.sink)
+
+
+@dataclass(frozen=True, slots=True)
 class Sensitive:
     """Sensitive field masking via mixin-sensitivity."""
 
@@ -181,5 +210,13 @@ class Sensitive:
         return sensitive
 
 
-AspectEntry = Logged | Requires | TenantScoped | Throttled | WrapErrors | Sensitive
+AspectEntry = (
+    Logged
+    | Requires
+    | TenantScoped
+    | Throttled
+    | Monitored
+    | WrapErrors
+    | Sensitive
+)
 """Union type alias for all aspect entry types."""
