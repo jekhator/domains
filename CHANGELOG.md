@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- **Module structure conformance**: Added docstrings and re-exports to all empty `__init__.py` files across domain-suite per per-dir-type convention: group-level dirs (decorators, services, config, errors, common) receive one-line docstrings; concern-package dirs (e.g., monitored, metrics, registry) receive docstrings plus absolute re-exports and `__all__`; constants-dir files remain intentionally empty; test-dir files receive descriptive one-line docstrings for discoverability.
 - **CI/Workflow**: Expanded `strict-module.yml` to lint and LOC-cap all five import roots (domain-errors, domain-security, domain-api-limiter, domain-monitoring, domain-aspects) instead of domain-aspects alone. Each root now gated by strict-module and LOC violations in any root fail CI.
 
 ## [0.1.1] - 2026-07-11

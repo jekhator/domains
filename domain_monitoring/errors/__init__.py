@@ -1,0 +1,1 @@
+"""Monitoring-specific error types."""
