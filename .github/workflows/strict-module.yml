@@ -27,6 +27,20 @@ jobs:
       - name: Install Python 3.12
         run: uv python install 3.12
       - name: Run strict-module
-        run: uvx --python 3.12 --from strict-suite==0.1.0 strict-module domain_aspects/ --format github
+        run: |
+          echo "=== strict-module: domain_errors ===" && \
+          uvx --python 3.12 --from strict-suite==0.1.0 strict-module domain_errors/ --format github && \
+          echo "=== strict-module: domain_security ===" && \
+          uvx --python 3.12 --from strict-suite==0.1.0 strict-module domain_security/ --format github && \
+          echo "=== strict-module: domain_api_limiter ===" && \
+          uvx --python 3.12 --from strict-suite==0.1.0 strict-module domain_api_limiter/ --format github && \
+          echo "=== strict-module: domain_monitoring ===" && \
+          uvx --python 3.12 --from strict-suite==0.1.0 strict-module domain_monitoring/ --format github && \
+          echo "=== strict-module: domain_aspects ===" && \
+          uvx --python 3.12 --from strict-suite==0.1.0 strict-module domain_aspects/ --format github
       - name: Check LOC cap
-        run: uvx --python 3.12 --from strict-suite==0.1.0 strict-module loc-cap domain_aspects/
+        run: |
+          for dir in domain_errors domain_security domain_api_limiter domain_monitoring domain_aspects; do
+            echo "=== loc-cap: $dir ===" && \
+            uvx --python 3.12 --from strict-suite==0.1.0 strict-module loc-cap "$dir"
+          done

@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - **domain-aspects**: Monitored aspect entry composing `domain-monitoring` decorator into the aspect container. Follows suite-wide class-capable standard with target-polymorphic decoration, class fan-out over public own methods, root+method-name derivation, override=replace via marker attribute, and frozenset consts for container config. Includes unit and REAL-dependency integration tests with composition test for stacking with other aspects.
 
+### Fixed
+
+- **CI/Workflow**: Expanded `strict-module.yml` to lint and LOC-cap all five import roots (domain-errors, domain-security, domain-api-limiter, domain-monitoring, domain-aspects) instead of domain-aspects alone. Each root now gated by strict-module and LOC violations in any root fail CI.
+
 ## [0.1.1] - 2026-07-11
 
 ### Fixed
