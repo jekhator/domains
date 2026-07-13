@@ -364,3 +364,26 @@ class TestTenantScopedClassLevel:
         error = exc_info.value
         assert error.context.get("method_name") == "get"
         assert error.context.get("param_name") == "tenant_id"
+
+    def test_class_decorator_skips_nested_classes(self) -> None:
+        """Decorator skips nested classes when scanning attributes."""
+        principal = Principal(id="user:test", roles=frozenset(), scopes=frozenset())
+        manager = SecurityContextManager()
+        manager.set(SecurityContext(principal=principal, tenant_id="tenant:acme"))
+
+        @tenant_scoped("tenant_id")
+        class Repository:
+            """Repository with nested class."""
+
+            class Config:
+                """Nested configuration class."""
+
+                timeout: int = 30
+
+            def get(self, tenant_id: str) -> str:
+                """Get entity."""
+                return f"entity for {tenant_id}"
+
+        repo = Repository()
+        assert repo.get(tenant_id="tenant:acme") == "entity for tenant:acme"
+        assert Repository.Config.timeout == 30

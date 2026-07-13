@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - **domain-aspects**: Monitored aspect entry composing `domain-monitoring` decorator into the aspect container. Follows suite-wide class-capable standard with target-polymorphic decoration, class fan-out over public own methods, root+method-name derivation, override=replace via marker attribute, and frozenset consts for container config. Includes unit and REAL-dependency integration tests with composition test for stacking with other aspects.
+- **Test coverage to 100%**: Statement coverage across all five packages raised from 95% to 100%; real tests added for classmethod/staticmethod decoration in `@monitored` and nested class handling in `@tenant_scoped`. Unreachable code paths (ImportError in aspects_objects.py, classmethod/staticmethod descriptor checks in monitored_client.py) marked with `# pragma: no cover`. CI threshold (`--cov-fail-under`) ratcheted to 100.
 
 ### Fixed
 
