@@ -32,16 +32,16 @@ Changelog = "https://github.com/jekhator/domain-suite/blob/main/CHANGELOG.md"
 path = "domain_errors/config/_version.py"
 
 [tool.hatch.build.targets.wheel]
-packages = ["domain_errors", "domain_security", "domain_api_limiter", "domain_monitoring", "domain_aspects"]
+packages = ["domain_errors", "domain_security", "domain_api_limiter", "domain_monitoring", "domain_aspects", "domain_rag"]
 exclude = ["domain_*/**/tests"]
 
 [tool.pytest.ini_options]
-testpaths = ["domain_errors", "domain_security", "domain_api_limiter", "domain_monitoring", "domain_aspects"]
+testpaths = ["domain_errors", "domain_security", "domain_api_limiter", "domain_monitoring", "domain_aspects", "domain_rag"]
 python_files = ["test_*.py"]
 
 [tool.coverage.run]
-source = ["domain_errors", "domain_security", "domain_api_limiter", "domain_monitoring", "domain_aspects"]
-omit = ["domain_*/**/tests/*", "domain_*/common/constants/tests.py", "domain_aspects/conftest.py"]
+source = ["domain_errors", "domain_security", "domain_api_limiter", "domain_monitoring", "domain_aspects", "domain_rag"]
+omit = ["domain_*/**/tests/*", "domain_*/common/constants/tests.py", "domain_aspects/conftest.py", "domain_rag/conftest.py"]
 
 [tool.coverage.report]
 exclude_lines = [
@@ -68,13 +68,13 @@ extend-select = ["I", "TID252", "PLC0414", "UP035"]
 
 [tool.ruff.lint.isort]
 combine-as-imports = true
-known-first-party = ["domain_errors", "domain_security", "domain_api_limiter", "domain_monitoring", "domain_aspects"]
+known-first-party = ["domain_errors", "domain_security", "domain_api_limiter", "domain_monitoring", "domain_aspects", "domain_rag"]
 
 [tool.ruff.lint.flake8-tidy-imports]
 ban-relative-imports = "all"
 
 [tool.strict-module]
-paths = ["domain_errors/", "domain_security/", "domain_api_limiter/", "domain_monitoring/", "domain_aspects/"]
+paths = ["domain_errors/", "domain_security/", "domain_api_limiter/", "domain_monitoring/", "domain_aspects/", "domain_rag/"]
 exception_tags = ["fixture"]
 
 [tool.strict-module.loc-cap]
