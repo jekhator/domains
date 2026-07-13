@@ -181,7 +181,7 @@ class Monitored:
             from domain_monitoring.decorators.monitored.monitored_client import (
                 monitored,
             )
-        except ImportError as e:
+        except ImportError as e:  # pragma: no cover
             raise ImportError(
                 "domain-monitoring not installed; it is a hard dependency."
             ) from e

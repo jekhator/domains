@@ -230,3 +230,41 @@ class TestMonitoredEdgeCases:
 
         assert len(sink.events) == 2
         assert sink.events[1].outcome == Outcome.FAILURE
+
+    def test_monitored_class_with_classmethod(self) -> None:
+        """@monitored on class with classmethod includes it in public methods."""
+        sink = CollectingSink()
+
+        @monitored("factory", sink=sink)
+        class FactoryService:
+            """Service with classmethod."""
+
+            @classmethod
+            def create(cls) -> "FactoryService":
+                """Factory method."""
+                return cls()
+
+        obj = FactoryService.create()
+        assert obj is not None
+        assert len(sink.events) == 1
+        assert sink.events[0].event == "factory.create"
+        assert sink.events[0].outcome == Outcome.SUCCESS
+
+    def test_monitored_class_with_staticmethod(self) -> None:
+        """@monitored on class with staticmethod includes it in public methods."""
+        sink = CollectingSink()
+
+        @monitored("utils", sink=sink)
+        class UtilService:
+            """Service with staticmethod."""
+
+            @staticmethod
+            def helper() -> str:
+                """Helper function."""
+                return "helper_result"
+
+        result = UtilService.helper()
+        assert result == "helper_result"
+        assert len(sink.events) == 1
+        assert sink.events[0].event == "utils.helper"
+        assert sink.events[0].outcome == Outcome.SUCCESS

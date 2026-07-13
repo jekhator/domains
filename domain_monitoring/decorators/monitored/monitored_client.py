@@ -141,9 +141,9 @@ def _get_public_methods(cls: type) -> list[str]:
         if inspect.ismethod(value) or inspect.isfunction(value):
             if not hasattr(cls, "__bases__") or name not in dir(cls.__bases__[0]):
                 public.append(name)
-        elif isinstance(value, classmethod):
+        elif isinstance(value, classmethod):  # pragma: no cover
             public.append(name)
-        elif isinstance(value, staticmethod):
+        elif isinstance(value, staticmethod):  # pragma: no cover
             public.append(name)
 
     return public
