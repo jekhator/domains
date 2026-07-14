@@ -1,7 +1,4 @@
-"""Fixtures for policy tests.
-
-noqa: R004 (pytest fixtures are module-level functions by design)
-"""
+"""Fixtures for policy tests."""
 
 from __future__ import annotations
 

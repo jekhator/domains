@@ -3,12 +3,7 @@
 from __future__ import annotations
 
 from domain_errors import DomainError
-from domain_security.errors.constants.security_errors import (
-    ERR_AUTHZ_PERMISSION_DENIED,
-    ERR_SECRET_ACCESS_FAILED,
-    ERR_SECURITY_CONSTRAINT_VIOLATED,
-    ERR_TENANCY_BOUNDARY_VIOLATION,
-)
+from domain_security.errors.constants import security_errors as const
 from domain_security.errors.security_errors import (
     AuthzError,
     SecretError,
@@ -47,7 +42,7 @@ class TestSecurityError:
     def test_security_error_default_message(self) -> None:
         """SecurityError has default message."""
         error = SecurityError()
-        assert error.message == ERR_SECURITY_CONSTRAINT_VIOLATED
+        assert error.message == const.ERR_SECURITY_CONSTRAINT_VIOLATED
 
     def test_security_error_custom_message(self) -> None:
         """SecurityError accepts custom message."""
@@ -91,7 +86,7 @@ class TestAuthzError:
     def test_authz_error_default_message(self) -> None:
         """AuthzError has default message."""
         error = AuthzError()
-        assert error.message == ERR_AUTHZ_PERMISSION_DENIED
+        assert error.message == const.ERR_AUTHZ_PERMISSION_DENIED
 
     def test_authz_error_with_permission_context(self) -> None:
         """AuthzError can store permission in context."""
@@ -129,7 +124,7 @@ class TestTenancyError:
     def test_tenancy_error_default_message(self) -> None:
         """TenancyError has default message."""
         error = TenancyError()
-        assert error.message == ERR_TENANCY_BOUNDARY_VIOLATION
+        assert error.message == const.ERR_TENANCY_BOUNDARY_VIOLATION
 
     def test_tenancy_error_with_tenant_context(self) -> None:
         """TenancyError can store tenant IDs in context."""
@@ -170,7 +165,7 @@ class TestSecretError:
     def test_secret_error_default_message(self) -> None:
         """SecretError has default message."""
         error = SecretError()
-        assert error.message == ERR_SECRET_ACCESS_FAILED
+        assert error.message == const.ERR_SECRET_ACCESS_FAILED
 
     def test_secret_error_with_secret_name_context(self) -> None:
         """SecretError can store secret name in context."""
