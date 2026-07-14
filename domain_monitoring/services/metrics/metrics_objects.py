@@ -1,15 +1,19 @@
 """Metric event DTO. Frozen, hashable, immutable."""
 
+from __future__ import annotations
+
 from dataclasses import dataclass
 from enum import StrEnum
-from typing import Final
+from typing import Self
+
+from domain_monitoring.services.metrics import constants as const
 
 
 class Outcome(StrEnum):
     """Metric outcome enumeration."""
 
-    SUCCESS: Final = "success"
-    FAILURE: Final = "failure"
+    SUCCESS = "success"
+    FAILURE = "failure"
 
 
 @dataclass(frozen=True, slots=True)
@@ -25,17 +29,11 @@ class MetricEvent:
     def __post_init__(self) -> None:
         """Validate metric event invariants."""
         if not self.event:
-            raise ValueError("event must be non-empty")
+            raise ValueError(const.ERR_METRIC_EVENT_EMPTY)
         if self.duration_ms < 0:
-            raise ValueError("duration_ms must be non-negative")
+            raise ValueError(const.ERR_METRIC_DURATION_NEGATIVE)
         if not self.occurred_at:
-            raise ValueError("occurred_at must be non-empty")
-
-    def __hash__(self) -> int:
-        """Hash event by all fields for set membership."""
-        return hash(
-            (self.event, self.outcome, self.duration_ms, self.occurred_at, self.labels)
-        )
+            raise ValueError(const.ERR_METRIC_OCCURRED_AT_EMPTY)
 
     @classmethod
     def for_success(
@@ -44,7 +42,7 @@ class MetricEvent:
         duration_ms: float,
         occurred_at: str,
         labels: tuple[tuple[str, str], ...] = (),
-    ) -> "MetricEvent":
+    ) -> Self:
         """Create a success metric event."""
         return cls(
             event=event,
@@ -61,7 +59,7 @@ class MetricEvent:
         duration_ms: float,
         occurred_at: str,
         labels: tuple[tuple[str, str], ...] = (),
-    ) -> "MetricEvent":
+    ) -> Self:
         """Create a failure metric event."""
         return cls(
             event=event,

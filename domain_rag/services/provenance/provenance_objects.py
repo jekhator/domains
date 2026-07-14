@@ -1,15 +1,19 @@
 """Retrieval provenance event DTO. Frozen, hashable, immutable."""
 
+from __future__ import annotations
+
 from dataclasses import dataclass
 from enum import StrEnum
-from typing import Final
+from typing import Self
+
+from domain_rag.services.provenance import constants as const
 
 
 class ProvenanceOutcome(StrEnum):
     """Retrieval provenance outcome enumeration."""
 
-    SUCCESS: Final = "success"
-    FAILURE: Final = "failure"
+    SUCCESS = "success"
+    FAILURE = "failure"
 
 
 @dataclass(frozen=True, slots=True)
@@ -28,30 +32,15 @@ class RetrievalProvenance:
     def __post_init__(self) -> None:
         """Validate retrieval provenance invariants."""
         if not self.query:
-            raise ValueError("query must be non-empty")
+            raise ValueError(const.ERR_PROVENANCE_QUERY_EMPTY)
         if not self.principal_id:
-            raise ValueError("principal_id must be non-empty")
+            raise ValueError(const.ERR_PROVENANCE_PRINCIPAL_ID_EMPTY)
         if not self.session_id:
-            raise ValueError("session_id must be non-empty")
+            raise ValueError(const.ERR_PROVENANCE_SESSION_ID_EMPTY)
         if self.duration_ms < 0:
-            raise ValueError("duration_ms must be non-negative")
+            raise ValueError(const.ERR_PROVENANCE_DURATION_NEGATIVE)
         if not self.occurred_at:
-            raise ValueError("occurred_at must be non-empty")
-
-    def __hash__(self) -> int:
-        """Hash event by all fields for set membership."""
-        return hash(
-            (
-                self.query,
-                self.chunk_ids,
-                self.source_document_ids,
-                self.principal_id,
-                self.session_id,
-                self.outcome,
-                self.duration_ms,
-                self.occurred_at,
-            )
-        )
+            raise ValueError(const.ERR_PROVENANCE_OCCURRED_AT_EMPTY)
 
     @classmethod
     def for_success(
@@ -63,7 +52,7 @@ class RetrievalProvenance:
         session_id: str,
         duration_ms: float,
         occurred_at: str,
-    ) -> "RetrievalProvenance":
+    ) -> Self:
         """Create a success retrieval provenance event."""
         return cls(
             query=query,
@@ -84,7 +73,7 @@ class RetrievalProvenance:
         session_id: str,
         duration_ms: float,
         occurred_at: str,
-    ) -> "RetrievalProvenance":
+    ) -> Self:
         """Create a failure retrieval provenance event."""
         return cls(
             query=query,
