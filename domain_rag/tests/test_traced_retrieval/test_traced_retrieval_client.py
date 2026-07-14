@@ -123,7 +123,10 @@ class TestTracedRetrievalOnCallable:
 
         result = retrieve("query")
 
-        assert result == {"chunk_ids": ["c1", "c2"], "source_document_ids": ["d1", "d2"]}
+        assert result == {
+            "chunk_ids": ["c1", "c2"],
+            "source_document_ids": ["d1", "d2"],
+        }
         assert len(collecting_sink.events) == 1
         assert collecting_sink.events[0].chunk_ids == ("c1", "c2")
         assert collecting_sink.events[0].source_document_ids == ("d1", "d2")

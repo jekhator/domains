@@ -157,9 +157,7 @@ class TracedRetrievalClient:
                 source_document_ids = ()
                 if isinstance(result, dict):
                     chunk_ids = tuple(result.get("chunk_ids", []))
-                    source_document_ids = tuple(
-                        result.get("source_document_ids", [])
-                    )
+                    source_document_ids = tuple(result.get("source_document_ids", []))
                 elif isinstance(result, (list, tuple)):
                     chunk_ids = tuple(result)
 

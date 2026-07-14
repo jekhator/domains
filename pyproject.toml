@@ -5,7 +5,7 @@ build-backend = "hatchling.build"
 [project]
 name = "domain-suite"
 dynamic = ["version"]
-description = "Consolidated domain packages: typed errors, security, API rate limiting, monitoring, and cross-cutting aspects"
+description = "Consolidated domain packages: typed errors, security, API rate limiting, monitoring, retrieval provenance, and cross-cutting aspects"
 readme = "README.md"
 license = { text = "Apache-2.0" }
 authors = [{ name = "James Ekhator" }]

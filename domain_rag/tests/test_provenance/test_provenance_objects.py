@@ -198,16 +198,24 @@ class TestRetrievalProvenanceProperties:
     def test_is_failure_for_success(self) -> None:
         """is_failure returns False for success outcome."""
         provenance = RetrievalProvenance.for_success(
-            query="q", chunk_ids=(), source_document_ids=(), principal_id="p",
-            session_id="s", duration_ms=1.0, occurred_at="2026-07-07T12:00:00Z"
+            query="q",
+            chunk_ids=(),
+            source_document_ids=(),
+            principal_id="p",
+            session_id="s",
+            duration_ms=1.0,
+            occurred_at="2026-07-07T12:00:00Z",
         )
         assert not provenance.is_failure
 
     def test_is_failure_for_failure(self) -> None:
         """is_failure returns True for failure outcome."""
         provenance = RetrievalProvenance.for_failure(
-            query="q", principal_id="p", session_id="s", duration_ms=1.0,
-            occurred_at="2026-07-07T12:00:00Z"
+            query="q",
+            principal_id="p",
+            session_id="s",
+            duration_ms=1.0,
+            occurred_at="2026-07-07T12:00:00Z",
         )
         assert provenance.is_failure
 
@@ -239,12 +247,20 @@ class TestRetrievalProvenanceProperties:
     def test_hash_differs_for_different_outcomes(self) -> None:
         """Hash differs for different outcomes."""
         success = RetrievalProvenance.for_success(
-            query="q", chunk_ids=(), source_document_ids=(), principal_id="p",
-            session_id="s", duration_ms=1.0, occurred_at="2026-07-07T12:00:00Z"
+            query="q",
+            chunk_ids=(),
+            source_document_ids=(),
+            principal_id="p",
+            session_id="s",
+            duration_ms=1.0,
+            occurred_at="2026-07-07T12:00:00Z",
         )
         failure = RetrievalProvenance.for_failure(
-            query="q", principal_id="p", session_id="s", duration_ms=1.0,
-            occurred_at="2026-07-07T12:00:00Z"
+            query="q",
+            principal_id="p",
+            session_id="s",
+            duration_ms=1.0,
+            occurred_at="2026-07-07T12:00:00Z",
         )
 
         assert hash(success) != hash(failure)
@@ -252,16 +268,26 @@ class TestRetrievalProvenanceProperties:
     def test_zero_duration_valid(self) -> None:
         """Zero duration is valid (edge case boundary)."""
         provenance = RetrievalProvenance.for_success(
-            query="q", chunk_ids=(), source_document_ids=(), principal_id="p",
-            session_id="s", duration_ms=0.0, occurred_at="2026-07-07T12:00:00Z"
+            query="q",
+            chunk_ids=(),
+            source_document_ids=(),
+            principal_id="p",
+            session_id="s",
+            duration_ms=0.0,
+            occurred_at="2026-07-07T12:00:00Z",
         )
         assert provenance.duration_ms == 0.0
 
     def test_empty_chunks_and_sources_valid(self) -> None:
         """Empty chunk and source tuples are valid."""
         provenance = RetrievalProvenance.for_success(
-            query="q", chunk_ids=(), source_document_ids=(), principal_id="p",
-            session_id="s", duration_ms=10.0, occurred_at="2026-07-07T12:00:00Z"
+            query="q",
+            chunk_ids=(),
+            source_document_ids=(),
+            principal_id="p",
+            session_id="s",
+            duration_ms=10.0,
+            occurred_at="2026-07-07T12:00:00Z",
         )
         assert provenance.chunk_ids == ()
         assert provenance.source_document_ids == ()
