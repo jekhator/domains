@@ -44,9 +44,7 @@ class Logged:
         try:
             from mixin_logging import logged
         except ImportError as e:
-            raise ImportError(
-                "mixin-logging not installed; add [logging] extra."
-            ) from e
+            raise ImportError(const.ERR_ASPECT_LOGGED_IMPORT_MISSING) from e
         return logged(self.event)
 
 
@@ -69,9 +67,7 @@ class Requires:
         try:
             from domain_security.decorators.requires import requires
         except ImportError as e:
-            raise ImportError(
-                "domain-security not installed; add [security] extra."
-            ) from e
+            raise ImportError(const.ERR_ASPECT_REQUIRES_IMPORT_MISSING) from e
         return requires(self.permission)
 
 
@@ -94,9 +90,7 @@ class TenantScoped:
         try:
             from domain_security.decorators.tenant_scoped import tenant_scoped
         except ImportError as e:
-            raise ImportError(
-                "domain-security not installed; add [security] extra."
-            ) from e
+            raise ImportError(const.ERR_ASPECT_TENANT_SCOPED_IMPORT_MISSING) from e
         return tenant_scoped(self.param_name)
 
 
@@ -125,9 +119,7 @@ class Throttled:
         try:
             from domain_api_limiter.decorators.throttled import throttled
         except ImportError as e:
-            raise ImportError(
-                "domain-api-limiter not installed; add [throttle] extra."
-            ) from e
+            raise ImportError(const.ERR_ASPECT_THROTTLED_IMPORT_MISSING) from e
         tiers_dict = dict(self.tiers) if self.tiers else None
         return throttled(self.scope, self.rate, tiers=tiers_dict)
 
@@ -154,9 +146,7 @@ class WrapErrors:
         try:
             from domain_errors import wrap_errors
         except ImportError as e:
-            raise ImportError(
-                "domain-errors not installed; it is a hard dependency."
-            ) from e
+            raise ImportError(const.ERR_ASPECT_WRAP_ERRORS_IMPORT_MISSING) from e
         return wrap_errors(as_=self.as_, catch=self.catch)  # type: ignore[arg-type]
 
 
@@ -182,9 +172,7 @@ class Monitored:
                 monitored,
             )
         except ImportError as e:  # pragma: no cover
-            raise ImportError(
-                "domain-monitoring not installed; it is a hard dependency."
-            ) from e
+            raise ImportError(const.ERR_ASPECT_MONITORED_IMPORT_MISSING) from e
         return monitored(self.event, sink=self.sink)
 
 
@@ -204,9 +192,7 @@ class Sensitive:
         try:
             from mixin_sensitivity import sensitive
         except ImportError as e:
-            raise ImportError(
-                "mixin-sensitivity not installed; add [sensitivity] extra."
-            ) from e
+            raise ImportError(const.ERR_ASPECT_SENSITIVE_IMPORT_MISSING) from e
         return sensitive
 
 
