@@ -7,6 +7,8 @@ from dataclasses import dataclass
 from enum import StrEnum
 from typing import TYPE_CHECKING, Optional
 
+from domain_aspects.services.constants import aspects as const
+
 if TYPE_CHECKING:
     from domain_monitoring.services.metrics.metrics_client import MetricSink
 
@@ -31,7 +33,7 @@ class Logged:
 
     def __post_init__(self) -> None:
         if not self.event or not isinstance(self.event, str):
-            raise ValueError("Logged.event must be a non-empty string.")
+            raise ValueError(const.ERR_ASPECT_LOGGED_EVENT_EMPTY)
 
     @property
     def kind(self) -> AspectKind:
@@ -56,7 +58,7 @@ class Requires:
 
     def __post_init__(self) -> None:
         if not self.permission or not isinstance(self.permission, str):
-            raise ValueError("Requires.permission must be a non-empty string.")
+            raise ValueError(const.ERR_ASPECT_REQUIRES_PERMISSION_EMPTY)
 
     @property
     def kind(self) -> AspectKind:
@@ -81,7 +83,7 @@ class TenantScoped:
 
     def __post_init__(self) -> None:
         if not self.param_name or not isinstance(self.param_name, str):
-            raise ValueError("TenantScoped.param_name must be a non-empty string.")
+            raise ValueError(const.ERR_ASPECT_TENANT_SCOPED_PARAM_EMPTY)
 
     @property
     def kind(self) -> AspectKind:
@@ -108,11 +110,11 @@ class Throttled:
 
     def __post_init__(self) -> None:
         if not self.scope or not isinstance(self.scope, str):
-            raise ValueError("Throttled.scope must be a non-empty string.")
+            raise ValueError(const.ERR_ASPECT_THROTTLED_SCOPE_EMPTY)
         if not self.rate or not isinstance(self.rate, str):
-            raise ValueError("Throttled.rate must be a non-empty string.")
+            raise ValueError(const.ERR_ASPECT_THROTTLED_RATE_EMPTY)
         if not isinstance(self.tiers, tuple):
-            raise ValueError("Throttled.tiers must be a tuple of pairs.")
+            raise ValueError(const.ERR_ASPECT_THROTTLED_TIERS_NOT_TUPLE)
 
     @property
     def kind(self) -> AspectKind:
@@ -139,11 +141,9 @@ class WrapErrors:
 
     def __post_init__(self) -> None:
         if not isinstance(self.as_, type):
-            raise ValueError("WrapErrors.as_ must be an exception class.")
+            raise ValueError(const.ERR_ASPECT_WRAP_ERRORS_AS_NOT_CLASS)
         if not self.catch or not isinstance(self.catch, tuple):
-            raise ValueError(
-                "WrapErrors.catch must be a non-empty tuple of exception types."
-            )
+            raise ValueError(const.ERR_ASPECT_WRAP_ERRORS_CATCH_INVALID)
 
     @property
     def kind(self) -> AspectKind:
@@ -169,7 +169,7 @@ class Monitored:
 
     def __post_init__(self) -> None:
         if not self.event or not isinstance(self.event, str):
-            raise ValueError("Monitored.event must be a non-empty string.")
+            raise ValueError(const.ERR_ASPECT_MONITORED_EVENT_EMPTY)
 
     @property
     def kind(self) -> AspectKind:
