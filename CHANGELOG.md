@@ -10,12 +10,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - **domain-aspects**: Monitored aspect entry composing `domain-monitoring` decorator into the aspect container. Follows suite-wide class-capable standard with target-polymorphic decoration, class fan-out over public own methods, root+method-name derivation, override=replace via marker attribute, and frozenset consts for container config. Includes unit and REAL-dependency integration tests with composition test for stacking with other aspects.
-- **Test coverage to 100%**: Statement coverage across all five packages raised from 95% to 100%; real tests added for classmethod/staticmethod decoration in `@monitored` and nested class handling in `@tenant_scoped`. Unreachable code paths (ImportError in aspects_objects.py, classmethod/staticmethod descriptor checks in monitored_client.py) marked with `# pragma: no cover`. CI threshold (`--cov-fail-under`) ratcheted to 100.
+- **domain-rag**: Vendor-neutral retrieval provenance wrapper with HIPAA-auditable audit trails. Emits `RetrievalProvenance` (query, chunk_ids, source_document_ids, principal_id, session_id, outcome, duration) via `@traced_retrieval` decorator. Includes `ProvenanceSink` protocol, `NullProvenanceSink` (default), `CollectingProvenanceSink` (testing), and `ProvenanceRegistry` for global sink binding. Supports sync/async callables and class decoration with method fan-out. Never swallows exceptions. 100% coverage with real tests covering sink collection, decorator invocation, registry binding, and sync/async paths.
+- **Test coverage to 100%**: Statement coverage across all six packages raised from 95% to 100%; real tests added for classmethod/staticmethod decoration in `@monitored` and nested class handling in `@tenant_scoped`. Unreachable code paths (ImportError in aspects_objects.py, classmethod/staticmethod descriptor checks in monitored_client.py) marked with `# pragma: no cover`. CI threshold (`--cov-fail-under`) ratcheted to 100.
 
 ### Fixed
 
 - **Module structure conformance**: Added docstrings and re-exports to all empty `__init__.py` files across domain-suite per per-dir-type convention: group-level dirs (decorators, services, config, errors, common) receive one-line docstrings; concern-package dirs (e.g., monitored, metrics, registry) receive docstrings plus absolute re-exports and `__all__`; constants-dir files remain intentionally empty; test-dir files receive descriptive one-line docstrings for discoverability.
-- **CI/Workflow**: Expanded `strict-module.yml` to lint and LOC-cap all five import roots (domain-errors, domain-security, domain-api-limiter, domain-monitoring, domain-aspects) instead of domain-aspects alone. Each root now gated by strict-module and LOC violations in any root fail CI.
+- **CI/Workflow**: Expanded `strict-module.yml` to lint and LOC-cap all six import roots (domain-errors, domain-security, domain-api-limiter, domain-monitoring, domain-aspects, domain-rag) instead of domain-aspects alone. Each root now gated by strict-module and LOC violations in any root fail CI.
 
 ## [0.1.1] - 2026-07-11
 
@@ -72,3 +73,4 @@ For detailed changes to individual packages before consolidation, see:
 - `docs/domain_api_limiter/CHANGELOG-history.md`
 - `docs/domain_monitoring/CHANGELOG-history.md`
 - `docs/domain_aspects/CHANGELOG-history.md`
+- `docs/domain_rag/CHANGELOG-history.md` (first release in domain-suite 0.1.1+)
