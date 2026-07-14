@@ -22,6 +22,13 @@ __all__ = [
     "ERR_ASPECT_WRAP_ERRORS_AS_NOT_CLASS",
     "ERR_ASPECT_WRAP_ERRORS_CATCH_INVALID",
     "ERR_ASPECT_MONITORED_EVENT_EMPTY",
+    "ERR_ASPECT_LOGGED_IMPORT_MISSING",
+    "ERR_ASPECT_REQUIRES_IMPORT_MISSING",
+    "ERR_ASPECT_TENANT_SCOPED_IMPORT_MISSING",
+    "ERR_ASPECT_THROTTLED_IMPORT_MISSING",
+    "ERR_ASPECT_WRAP_ERRORS_IMPORT_MISSING",
+    "ERR_ASPECT_MONITORED_IMPORT_MISSING",
+    "ERR_ASPECT_SENSITIVE_IMPORT_MISSING",
 ]
 
 
@@ -78,3 +85,34 @@ ERR_ASPECT_WRAP_ERRORS_CATCH_INVALID: Final = (
 )
 
 ERR_ASPECT_MONITORED_EVENT_EMPTY: Final = "Monitored.event must be a non-empty string."
+
+
+"""Aspect dependency import error messages."""
+
+ERR_ASPECT_LOGGED_IMPORT_MISSING: Final = (
+    "mixin-logging not installed; add [logging] extra."
+)
+
+ERR_ASPECT_REQUIRES_IMPORT_MISSING: Final = (
+    "domain-security not installed; add [security] extra."
+)
+
+ERR_ASPECT_TENANT_SCOPED_IMPORT_MISSING: Final = (
+    "domain-security not installed; add [security] extra."
+)
+
+ERR_ASPECT_THROTTLED_IMPORT_MISSING: Final = (
+    "domain-api-limiter not installed; add [throttle] extra."
+)
+
+ERR_ASPECT_WRAP_ERRORS_IMPORT_MISSING: Final = (
+    "domain-errors not installed; it is a hard dependency."
+)
+
+ERR_ASPECT_MONITORED_IMPORT_MISSING: Final = (
+    "domain-monitoring not installed; it is a hard dependency."
+)
+
+ERR_ASPECT_SENSITIVE_IMPORT_MISSING: Final = (
+    "mixin-sensitivity not installed; add [sensitivity] extra."
+)
