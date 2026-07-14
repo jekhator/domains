@@ -6,7 +6,7 @@ from dataclasses import dataclass
 from enum import StrEnum
 from typing import Self
 
-from domain_rag.services.provenance import constants as const
+from domain_rag.services.constants import provenance as const
 
 
 class ProvenanceOutcome(StrEnum):

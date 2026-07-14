@@ -6,7 +6,7 @@ from dataclasses import dataclass
 from enum import StrEnum
 from typing import Self
 
-from domain_monitoring.services.metrics import constants as const
+from domain_monitoring.services.constants import metrics as const
 
 
 class Outcome(StrEnum):

@@ -7,7 +7,7 @@ from dataclasses import dataclass
 from enum import StrEnum
 from typing import TYPE_CHECKING, Optional
 
-from domain_aspects.services.aspects import constants as const
+from domain_aspects.services.constants import aspects as const
 
 if TYPE_CHECKING:
     from domain_monitoring.services.metrics.metrics_client import MetricSink
