@@ -1,1 +1,1 @@
-"""Shared test constants."""
+"""Shared test constants. Imported as const."""

@@ -14,6 +14,7 @@ from domain_security.context.security_context.security_context_objects import (
     SecurityContext,
 )
 from domain_security.decorators.constants import tenant_scoped as const
+from domain_security.errors.constants import security_errors as errors_const
 from domain_security.errors.security_errors import (
     SecurityDeclarationError,
     TenancyError,
@@ -96,12 +97,8 @@ class TenantScoped:
         sig = inspect.signature(func)
         if param_name != const.SELF_TENANT_ID:
             if param_name not in sig.parameters:
-                from domain_security.errors.constants.security_errors import (
-                    ERR_SECURITY_DECLARATION_FAILED,
-                )
-
                 raise SecurityDeclarationError(
-                    message=ERR_SECURITY_DECLARATION_FAILED,
+                    message=errors_const.ERR_SECURITY_DECLARATION_FAILED,
                     method_name=method_name,
                     param_name=param_name,
                 )

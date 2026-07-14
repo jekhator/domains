@@ -3,13 +3,7 @@
 from __future__ import annotations
 
 from domain_errors import DomainError
-from domain_security.errors.constants.security_errors import (
-    ERR_AUTHZ_PERMISSION_DENIED,
-    ERR_SECRET_ACCESS_FAILED,
-    ERR_SECURITY_CONSTRAINT_VIOLATED,
-    ERR_SECURITY_DECLARATION_FAILED,
-    ERR_TENANCY_BOUNDARY_VIOLATION,
-)
+from domain_security.errors.constants import security_errors as const
 
 
 class SecurityError(DomainError):
@@ -19,21 +13,21 @@ class SecurityError(DomainError):
     code = "security_error"
     http_status = 403
     retryable = False
-    default_message = ERR_SECURITY_CONSTRAINT_VIOLATED
+    default_message = const.ERR_SECURITY_CONSTRAINT_VIOLATED
 
 
 class AuthzError(SecurityError):
     """Permission denied by authorization policy."""
 
     code = "authz_denied"
-    default_message = ERR_AUTHZ_PERMISSION_DENIED
+    default_message = const.ERR_AUTHZ_PERMISSION_DENIED
 
 
 class TenancyError(SecurityError):
     """Operation crossed or lacked a tenant boundary."""
 
     code = "tenant_boundary_violation"
-    default_message = ERR_TENANCY_BOUNDARY_VIOLATION
+    default_message = const.ERR_TENANCY_BOUNDARY_VIOLATION
 
 
 class SecretError(SecurityError):
@@ -41,7 +35,7 @@ class SecretError(SecurityError):
 
     code = "secret_access_failed"
     http_status = 500
-    default_message = ERR_SECRET_ACCESS_FAILED
+    default_message = const.ERR_SECRET_ACCESS_FAILED
 
 
 class SecurityDeclarationError(SecurityError):
@@ -50,4 +44,4 @@ class SecurityDeclarationError(SecurityError):
     code = "security_declaration_failed"
     http_status = 500
     retryable = False
-    default_message = ERR_SECURITY_DECLARATION_FAILED
+    default_message = const.ERR_SECURITY_DECLARATION_FAILED
