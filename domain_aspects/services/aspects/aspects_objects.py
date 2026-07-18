@@ -156,9 +156,7 @@ class Monitored:
 
     event: str
     sink: Optional[MetricSink] = None
-    labels_from_result: Optional[
-        Callable[[object], tuple[tuple[str, str], ...]]
-    ] = None
+    labels_from_result: Optional[Callable[[object], tuple[tuple[str, str], ...]]] = None
     labels_from_exc: Optional[
         Callable[[BaseException], tuple[tuple[str, str], ...]]
     ] = None

@@ -260,9 +260,7 @@ class TestRealDepsIntegration:
             def emit(self, event: MetricEvent) -> None:
                 collected_events.append(event)
 
-        @aspects(
-            objs.Monitored(event="test.no_labels", sink=CollectingSink())
-        )
+        @aspects(objs.Monitored(event="test.no_labels", sink=CollectingSink()))
         @dataclass(frozen=True, slots=True)
         class Service:
             def process(self) -> str:
