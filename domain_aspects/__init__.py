@@ -19,9 +19,11 @@ from domain_aspects.services.aspects.aspects_objects import (
     Throttled,
     WrapErrors,
 )
+from domain_aspects.services.constants.aspects import ASPECT_ORDER
 
 __all__ = [
     "__version__",
+    "ASPECT_ORDER",
     "aspects",
     "AspectEntry",
     "AspectKind",

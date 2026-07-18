@@ -6,6 +6,7 @@ import pytest
 
 import domain_aspects
 from domain_aspects.services.aspects import aspects_objects as objs
+from domain_aspects.services.constants.aspects import ASPECT_ORDER as const_order
 
 
 class TestPublicAPI:
@@ -16,6 +17,12 @@ class TestPublicAPI:
         assert hasattr(domain_aspects, "Monitored")
         assert "Monitored" in domain_aspects.__all__
         assert domain_aspects.Monitored is objs.Monitored
+
+    def test_aspect_order_in_public_api(self) -> None:
+        """ASPECT_ORDER is exported from domain_aspects root."""
+        assert hasattr(domain_aspects, "ASPECT_ORDER")
+        assert "ASPECT_ORDER" in domain_aspects.__all__
+        assert domain_aspects.ASPECT_ORDER is const_order
 
 
 class TestLazyImports:

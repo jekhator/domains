@@ -191,3 +191,84 @@ class TestRealDepsIntegration:
         service = Service()
         result = service.process()
         assert result == "composed"
+
+    def test_monitored_aspect_labels_from_result(self) -> None:
+        """Monitored aspect-path supports labels_from_result parity with decorator."""
+        from domain_monitoring.services.metrics.metrics_objects import MetricEvent
+
+        collected_events: list[MetricEvent] = []
+
+        class CollectingSink:
+            def emit(self, event: MetricEvent) -> None:
+                collected_events.append(event)
+
+        @aspects(
+            objs.Monitored(
+                event="test.result_labels",
+                sink=CollectingSink(),
+                labels_from_result=lambda r: (("tokens", str(r)),),
+            )
+        )
+        @dataclass(frozen=True, slots=True)
+        class Service:
+            def process(self) -> str:
+                return "result_value"
+
+        service = Service()
+        result = service.process()
+        assert result == "result_value"
+        assert len(collected_events) == 1
+        event = collected_events[0]
+        assert event.labels == (("tokens", "result_value"),)
+
+    def test_monitored_aspect_labels_from_exc(self) -> None:
+        """Monitored aspect-path supports labels_from_exc parity with decorator."""
+        from domain_monitoring.services.metrics.metrics_objects import MetricEvent
+
+        collected_events: list[MetricEvent] = []
+
+        class CollectingSink:
+            def emit(self, event: MetricEvent) -> None:
+                collected_events.append(event)
+
+        @aspects(
+            objs.Monitored(
+                event="test.exc_labels",
+                sink=CollectingSink(),
+                labels_from_exc=lambda e: (("error_type", type(e).__name__),),
+            )
+        )
+        @dataclass(frozen=True, slots=True)
+        class Service:
+            def process(self) -> None:
+                raise ValueError("test error")
+
+        service = Service()
+        with pytest.raises(ValueError):
+            service.process()
+        assert len(collected_events) == 1
+        event = collected_events[0]
+        assert event.labels == (("error_type", "ValueError"),)
+
+    def test_monitored_aspect_no_callbacks_empty_labels(self) -> None:
+        """Monitored aspect without callbacks produces empty labels tuple."""
+        from domain_monitoring.services.metrics.metrics_objects import MetricEvent
+
+        collected_events: list[MetricEvent] = []
+
+        class CollectingSink:
+            def emit(self, event: MetricEvent) -> None:
+                collected_events.append(event)
+
+        @aspects(objs.Monitored(event="test.no_labels", sink=CollectingSink()))
+        @dataclass(frozen=True, slots=True)
+        class Service:
+            def process(self) -> str:
+                return "value"
+
+        service = Service()
+        result = service.process()
+        assert result == "value"
+        assert len(collected_events) == 1
+        event = collected_events[0]
+        assert event.labels == ()

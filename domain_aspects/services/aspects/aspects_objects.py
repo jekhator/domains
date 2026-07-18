@@ -156,6 +156,10 @@ class Monitored:
 
     event: str
     sink: Optional[MetricSink] = None
+    labels_from_result: Optional[Callable[[object], tuple[tuple[str, str], ...]]] = None
+    labels_from_exc: Optional[
+        Callable[[BaseException], tuple[tuple[str, str], ...]]
+    ] = None
 
     def __post_init__(self) -> None:
         if not self.event or not isinstance(self.event, str):
@@ -173,7 +177,12 @@ class Monitored:
             )
         except ImportError as e:  # pragma: no cover
             raise ImportError(const.ERR_ASPECT_MONITORED_IMPORT_MISSING) from e
-        return monitored(self.event, sink=self.sink)
+        return monitored(
+            self.event,
+            sink=self.sink,
+            labels_from_result=self.labels_from_result,
+            labels_from_exc=self.labels_from_exc,
+        )
 
 
 @dataclass(frozen=True, slots=True)
