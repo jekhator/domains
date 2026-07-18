@@ -6,6 +6,7 @@ from datetime import datetime
 from typing import TypedDict
 
 from domain_monitoring.errors.constants import monitoring as const
+from domain_monitoring.services.constants import metrics as metrics_const
 from domain_monitoring.services.metrics.metrics_objects import MetricEvent
 
 
@@ -22,7 +23,9 @@ class _MetricDatapoint(TypedDict, total=False):
 class CloudWatchMetricSink:
     """Emit MetricEvent to AWS CloudWatch via boto3."""
 
-    def __init__(self, namespace: str = "domain-monitoring") -> None:
+    def __init__(
+        self, namespace: str = metrics_const.DEFAULT_CLOUDWATCH_NAMESPACE
+    ) -> None:
         """Initialize CloudWatch sink.
 
         Args:
@@ -48,7 +51,7 @@ class CloudWatchMetricSink:
         metric_point: _MetricDatapoint = {
             "MetricName": event.event,
             "Value": event.duration_ms,
-            "Unit": "Milliseconds",
+            "Unit": metrics_const.CLOUDWATCH_METRIC_UNIT,
             "Timestamp": datetime.fromisoformat(event.occurred_at),
             "Dimensions": self._build_dimensions(event),
         }
@@ -68,7 +71,7 @@ class CloudWatchMetricSink:
             List of dimension dicts for CloudWatch.
         """
         dimensions: list[dict[str, str]] = [
-            {"Name": "Outcome", "Value": event.outcome.value}
+            {"Name": metrics_const.CLOUDWATCH_DIMENSION_OUTCOME, "Value": event.outcome.value}
         ]
 
         for label_key, label_value in event.labels:

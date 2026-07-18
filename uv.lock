@@ -424,17 +424,17 @@ source = { editable = "." }
 
 [package.optional-dependencies]
 all = [
-    { name = "mixin-logging" },
-    { name = "mixin-sensitivity" },
+    { name = "boto3" },
+    { name = "mixin-suite" },
 ]
 cloudwatch = [
     { name = "boto3" },
 ]
 logging = [
-    { name = "mixin-logging" },
+    { name = "mixin-suite" },
 ]
 sensitivity = [
-    { name = "mixin-sensitivity" },
+    { name = "mixin-suite" },
 ]
 
 [package.dev-dependencies]
@@ -443,8 +443,7 @@ dev = [
     { name = "boto3" },
     { name = "botocore" },
     { name = "httpx" },
-    { name = "mixin-logging" },
-    { name = "mixin-sensitivity" },
+    { name = "mixin-suite" },
     { name = "mypy" },
     { name = "pytest" },
     { name = "pytest-cov" },
@@ -454,11 +453,11 @@ dev = [
 
 [package.metadata]
 requires-dist = [
+    { name = "boto3", marker = "extra == 'all'", specifier = ">=1.28.0" },
     { name = "boto3", marker = "extra == 'cloudwatch'", specifier = ">=1.28.0" },
-    { name = "mixin-logging", marker = "extra == 'all'", specifier = ">=0.6.0" },
-    { name = "mixin-logging", marker = "extra == 'logging'", specifier = ">=0.6.0" },
-    { name = "mixin-sensitivity", marker = "extra == 'all'", specifier = ">=0.4.0" },
-    { name = "mixin-sensitivity", marker = "extra == 'sensitivity'", specifier = ">=0.4.0" },
+    { name = "mixin-suite", marker = "extra == 'all'", specifier = ">=0.3.0" },
+    { name = "mixin-suite", marker = "extra == 'logging'", specifier = ">=0.3.0" },
+    { name = "mixin-suite", marker = "extra == 'sensitivity'", specifier = ">=0.3.0" },
 ]
 provides-extras = ["all", "cloudwatch", "logging", "sensitivity"]
 
@@ -468,8 +467,7 @@ dev = [
     { name = "boto3" },
     { name = "botocore" },
     { name = "httpx" },
-    { name = "mixin-logging", specifier = ">=0.6.0" },
-    { name = "mixin-sensitivity", specifier = ">=0.4.0" },
+    { name = "mixin-suite", specifier = ">=0.3.0" },
     { name = "mypy" },
     { name = "pytest", specifier = ">=8" },
     { name = "pytest-cov" },
@@ -722,21 +720,12 @@ wheels = [
 ]
 
 [[package]]
-name = "mixin-logging"
-version = "0.6.0"
+name = "mixin-suite"
+version = "0.3.0"
 source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/b5/5a/fd6d61a40cf6910df02994decf40b68cc613a0750c9a9a8c5acd45a6c16e/mixin_logging-0.6.0.tar.gz", hash = "sha256:1a2f9e0fac42db76048bff190d847734e7e7cdbad99cba0bb4f1cf38350a7fc7", size = 329812, upload-time = "2026-07-07T00:43:58.567Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/82/b5/76b409aeb1e0880df2eb6e8cf6eaf1d80172a9f47299f9ed19f23de24100/mixin_suite-0.3.0.tar.gz", hash = "sha256:3781c5b94eae58e93fd8cc1ca1add142722c09121d149d3a79a6af37a52b8321", size = 392739, upload-time = "2026-07-18T01:59:26.942Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/b8/98/436d034aa4f8c1d881e9cd110d1c676abf936041146b376b31507515e596/mixin_logging-0.6.0-py3-none-any.whl", hash = "sha256:0a8375bf639ce94e913118846a6e8d09b07e4c2fd00ffe06daf154db17207df4", size = 60228, upload-time = "2026-07-07T00:43:57.071Z" },
-]
-
-[[package]]
-name = "mixin-sensitivity"
-version = "0.4.0"
-source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/32/be/2e40c5cdf5510fac5e9c5a3994dff36ab06f90fdbe01e2e2909d35811cb3/mixin_sensitivity-0.4.0.tar.gz", hash = "sha256:a91b4c5dbb30d3c481eb3e565a2cf3f3de8e1228b7ccc6aae7a8df1f379099f4", size = 81025, upload-time = "2026-07-06T23:34:16.321Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/89/ed/e4f8954cdb7e4ed0788ccaee4f4f960e5012e46876efc12f03eac6baef06/mixin_sensitivity-0.4.0-py3-none-any.whl", hash = "sha256:81ba2f1ce502917b9852d68ecd44bcec6707fc9e0ff14faaa686d2d44ec2c552", size = 22270, upload-time = "2026-07-06T23:34:15.136Z" },
+    { url = "https://files.pythonhosted.org/packages/a0/63/9454fd39b49b563bf4144acba415e2a2f4ee74e8cce8ca6f46467e27e4cc/mixin_suite-0.3.0-py3-none-any.whl", hash = "sha256:0214060d62e7f59fe24a7b84bebefc80aa6919db9c22ad7d9e3e2f8aa326772d", size = 82849, upload-time = "2026-07-18T01:59:25.665Z" },
 ]
 
 [[package]]

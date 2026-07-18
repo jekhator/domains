@@ -28,4 +28,4 @@ class TestVersionConsistency:
         assert (
             len(unique_versions) == 1
         ), f"Version mismatch: {versions}"
-        assert versions["domain_errors"] == "0.3.0"
+        assert versions["domain_errors"] == "0.3.1"
