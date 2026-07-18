@@ -16,7 +16,7 @@ from domain_monitoring.services.registry.registry_client import MonitorRegistry
 
 try:
     from domain_monitoring.services.metrics.cloudwatch_sink import CloudWatchMetricSink
-except ImportError:
+except ImportError:  # pragma: no cover
     CloudWatchMetricSink = None  # type: ignore
 
 __all__ = [

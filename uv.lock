@@ -427,6 +427,9 @@ all = [
     { name = "mixin-logging" },
     { name = "mixin-sensitivity" },
 ]
+cloudwatch = [
+    { name = "boto3" },
+]
 logging = [
     { name = "mixin-logging" },
 ]
@@ -451,12 +454,13 @@ dev = [
 
 [package.metadata]
 requires-dist = [
+    { name = "boto3", marker = "extra == 'cloudwatch'", specifier = ">=1.28.0" },
     { name = "mixin-logging", marker = "extra == 'all'", specifier = ">=0.6.0" },
     { name = "mixin-logging", marker = "extra == 'logging'", specifier = ">=0.6.0" },
     { name = "mixin-sensitivity", marker = "extra == 'all'", specifier = ">=0.4.0" },
     { name = "mixin-sensitivity", marker = "extra == 'sensitivity'", specifier = ">=0.4.0" },
 ]
-provides-extras = ["all", "logging", "sensitivity"]
+provides-extras = ["all", "cloudwatch", "logging", "sensitivity"]
 
 [package.metadata.requires-dev]
 dev = [
@@ -719,20 +723,18 @@ wheels = [
 
 [[package]]
 name = "mixin-logging"
-version = "0.6.0"
-source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/b5/5a/fd6d61a40cf6910df02994decf40b68cc613a0750c9a9a8c5acd45a6c16e/mixin_logging-0.6.0.tar.gz", hash = "sha256:1a2f9e0fac42db76048bff190d847734e7e7cdbad99cba0bb4f1cf38350a7fc7", size = 329812, upload-time = "2026-07-07T00:43:58.567Z" }
+version = "0.6.1"
+source = { registry = "/home/jamesekhator/mixin-logging/dist" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/b8/98/436d034aa4f8c1d881e9cd110d1c676abf936041146b376b31507515e596/mixin_logging-0.6.0-py3-none-any.whl", hash = "sha256:0a8375bf639ce94e913118846a6e8d09b07e4c2fd00ffe06daf154db17207df4", size = 60228, upload-time = "2026-07-07T00:43:57.071Z" },
+    { path = "/home/jamesekhator/mixin-logging/dist/mixin_logging-0.6.1-py3-none-any.whl" },
 ]
 
 [[package]]
 name = "mixin-sensitivity"
-version = "0.4.0"
-source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/32/be/2e40c5cdf5510fac5e9c5a3994dff36ab06f90fdbe01e2e2909d35811cb3/mixin_sensitivity-0.4.0.tar.gz", hash = "sha256:a91b4c5dbb30d3c481eb3e565a2cf3f3de8e1228b7ccc6aae7a8df1f379099f4", size = 81025, upload-time = "2026-07-06T23:34:16.321Z" }
+version = "0.4.1"
+source = { registry = "/home/jamesekhator/mixin-sensitivity/dist" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/89/ed/e4f8954cdb7e4ed0788ccaee4f4f960e5012e46876efc12f03eac6baef06/mixin_sensitivity-0.4.0-py3-none-any.whl", hash = "sha256:81ba2f1ce502917b9852d68ecd44bcec6707fc9e0ff14faaa686d2d44ec2c552", size = 22270, upload-time = "2026-07-06T23:34:15.136Z" },
+    { path = "/home/jamesekhator/mixin-sensitivity/dist/mixin_sensitivity-0.4.1-py3-none-any.whl" },
 ]
 
 [[package]]
