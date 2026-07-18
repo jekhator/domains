@@ -8,7 +8,7 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from domain_monitoring.services.metrics.metrics_objects import MetricEvent, Outcome
+from domain_monitoring.services.metrics.metrics_objects import MetricEvent
 
 
 class TestCloudWatchMetricSink:
@@ -113,24 +113,21 @@ class TestCloudWatchMetricSink:
             CloudWatchMetricSink,
         )
 
-        with patch("domain_monitoring.services.metrics.cloudwatch_sink") as mock_module:
-            original_init = CloudWatchMetricSink.__init__
+        def init_no_boto3(self, namespace: str = "domain-monitoring") -> None:
+            try:
+                raise ImportError("No module named 'boto3'")
+            except ImportError as e:
+                from domain_monitoring.errors.constants import (
+                    monitoring as const,
+                )
 
-            def init_no_boto3(self, namespace: str = "domain-monitoring") -> None:
-                try:
-                    raise ImportError("No module named 'boto3'")
-                except ImportError as e:
-                    from domain_monitoring.errors.constants import (
-                        monitoring as const,
-                    )
+                raise ImportError(const.ERR_MONITORING_BOTO3_MISSING) from e
 
-                    raise ImportError(const.ERR_MONITORING_BOTO3_MISSING) from e
-
-            with patch.object(CloudWatchMetricSink, "__init__", init_no_boto3):
-                with pytest.raises(
-                    ImportError, match="CloudWatch sink requires boto3"
-                ):
-                    CloudWatchMetricSink()
+        with patch.object(CloudWatchMetricSink, "__init__", init_no_boto3):
+            with pytest.raises(
+                ImportError, match="CloudWatch sink requires boto3"
+            ):
+                CloudWatchMetricSink()
 
     def test_cloudwatch_sink_default_namespace(self) -> None:
         """CloudWatchMetricSink uses default namespace if not specified."""
