@@ -21,17 +21,38 @@ class MonitoredClient:
 
     @staticmethod
     def monitored(
-        event: str, sink: Optional[MetricSink] = None
+        event: str,
+        sink: Optional[MetricSink] = None,
+        labels_from_result: Optional[Callable[[object], tuple[tuple[str, str], ...]]]
+        = None,
+        labels_from_exc: Optional[Callable[[BaseException], tuple[tuple[str, str], ...]]]
+        = None,
     ) -> Callable[[Target], Target]:
         """Apply metric tracking to callables and classes."""
 
         def decorator(target: Target) -> Target:
             """Apply monitoring to target."""
             if inspect.isclass(target):
-                return cast(Target, MonitoredClient._monitor_class(target, event, sink))
+                return cast(
+                    Target,
+                    MonitoredClient._monitor_class(
+                        target,
+                        event,
+                        sink,
+                        labels_from_result,
+                        labels_from_exc,
+                    ),
+                )
             elif callable(target):
                 return cast(
-                    Target, MonitoredClient._monitor_callable(target, event, sink)
+                    Target,
+                    MonitoredClient._monitor_callable(
+                        target,
+                        event,
+                        sink,
+                        labels_from_result,
+                        labels_from_exc,
+                    ),
                 )
             else:
                 raise MonitoringDeclarationError(const.ERR_MONITORING_INVALID_TARGET)
@@ -40,17 +61,37 @@ class MonitoredClient:
 
     @staticmethod
     def _monitor_callable(
-        fn: Callable[..., Any], event: str, sink: Optional[MetricSink]
+        fn: Callable[..., Any],
+        event: str,
+        sink: Optional[MetricSink],
+        labels_from_result: Optional[
+            Callable[[object], tuple[tuple[str, str], ...]]
+        ] = None,
+        labels_from_exc: Optional[
+            Callable[[BaseException], tuple[tuple[str, str], ...]]
+        ] = None,
     ) -> Callable[..., Any]:
         """Wrap a callable with monitoring."""
         if asyncio.iscoroutinefunction(fn):
-            return MonitoredClient._wrap_async(fn, event, sink)
+            return MonitoredClient._wrap_async(
+                fn, event, sink, labels_from_result, labels_from_exc
+            )
         else:
-            return MonitoredClient._wrap_sync(fn, event, sink)
+            return MonitoredClient._wrap_sync(
+                fn, event, sink, labels_from_result, labels_from_exc
+            )
 
     @staticmethod
     def _wrap_sync(
-        fn: Callable[..., Any], event: str, sink: Optional[MetricSink]
+        fn: Callable[..., Any],
+        event: str,
+        sink: Optional[MetricSink],
+        labels_from_result: Optional[
+            Callable[[object], tuple[tuple[str, str], ...]]
+        ] = None,
+        labels_from_exc: Optional[
+            Callable[[BaseException], tuple[tuple[str, str], ...]]
+        ] = None,
     ) -> Callable[..., Any]:
         """Wrap synchronous callable."""
 
@@ -64,20 +105,26 @@ class MonitoredClient:
                 result = fn(*args, **kwargs)
                 end_time = datetime.now(timezone.utc)
                 duration_ms = (end_time - start_time).total_seconds() * 1000
+                labels = (
+                    labels_from_result(result) if labels_from_result else ()
+                )
                 metric_event = MetricEvent.for_success(
                     event=event,
                     duration_ms=duration_ms,
                     occurred_at=end_time.isoformat(),
+                    labels=labels,
                 )
                 actual_sink.emit(metric_event)
                 return result
-            except Exception:
+            except Exception as exc:
                 end_time = datetime.now(timezone.utc)
                 duration_ms = (end_time - start_time).total_seconds() * 1000
+                labels = labels_from_exc(exc) if labels_from_exc else ()
                 metric_event = MetricEvent.for_failure(
                     event=event,
                     duration_ms=duration_ms,
                     occurred_at=end_time.isoformat(),
+                    labels=labels,
                 )
                 actual_sink.emit(metric_event)
                 raise
@@ -86,7 +133,15 @@ class MonitoredClient:
 
     @staticmethod
     def _wrap_async(
-        fn: Callable[..., Any], event: str, sink: Optional[MetricSink]
+        fn: Callable[..., Any],
+        event: str,
+        sink: Optional[MetricSink],
+        labels_from_result: Optional[
+            Callable[[object], tuple[tuple[str, str], ...]]
+        ] = None,
+        labels_from_exc: Optional[
+            Callable[[BaseException], tuple[tuple[str, str], ...]]
+        ] = None,
     ) -> Callable[..., Any]:
         """Wrap asynchronous callable."""
 
@@ -100,20 +155,26 @@ class MonitoredClient:
                 result = await fn(*args, **kwargs)
                 end_time = datetime.now(timezone.utc)
                 duration_ms = (end_time - start_time).total_seconds() * 1000
+                labels = (
+                    labels_from_result(result) if labels_from_result else ()
+                )
                 metric_event = MetricEvent.for_success(
                     event=event,
                     duration_ms=duration_ms,
                     occurred_at=end_time.isoformat(),
+                    labels=labels,
                 )
                 actual_sink.emit(metric_event)
                 return result
-            except Exception:
+            except Exception as exc:
                 end_time = datetime.now(timezone.utc)
                 duration_ms = (end_time - start_time).total_seconds() * 1000
+                labels = labels_from_exc(exc) if labels_from_exc else ()
                 metric_event = MetricEvent.for_failure(
                     event=event,
                     duration_ms=duration_ms,
                     occurred_at=end_time.isoformat(),
+                    labels=labels,
                 )
                 actual_sink.emit(metric_event)
                 raise
@@ -121,7 +182,17 @@ class MonitoredClient:
         return async_wrapper
 
     @staticmethod
-    def _monitor_class(cls: type, event: str, sink: Optional[MetricSink]) -> type:
+    def _monitor_class(
+        cls: type,
+        event: str,
+        sink: Optional[MetricSink],
+        labels_from_result: Optional[
+            Callable[[object], tuple[tuple[str, str], ...]]
+        ] = None,
+        labels_from_exc: Optional[
+            Callable[[BaseException], tuple[tuple[str, str], ...]]
+        ] = None,
+    ) -> type:
         """Fan out monitoring to public methods on a class."""
         public_methods = MonitoredClient._get_public_methods(cls)
 
@@ -132,7 +203,11 @@ class MonitoredClient:
             original_method = getattr(cls, method_name)
             derived_event = f"{event}.{method_name}"
             monitored_method = MonitoredClient._monitor_callable(
-                original_method, derived_event, sink
+                original_method,
+                derived_event,
+                sink,
+                labels_from_result,
+                labels_from_exc,
             )
             setattr(cls, method_name, monitored_method)
 

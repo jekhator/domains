@@ -427,6 +427,9 @@ all = [
     { name = "mixin-logging" },
     { name = "mixin-sensitivity" },
 ]
+cloudwatch = [
+    { name = "boto3" },
+]
 logging = [
     { name = "mixin-logging" },
 ]
@@ -451,12 +454,13 @@ dev = [
 
 [package.metadata]
 requires-dist = [
+    { name = "boto3", marker = "extra == 'cloudwatch'", specifier = ">=1.28.0" },
     { name = "mixin-logging", marker = "extra == 'all'", specifier = ">=0.6.0" },
     { name = "mixin-logging", marker = "extra == 'logging'", specifier = ">=0.6.0" },
     { name = "mixin-sensitivity", marker = "extra == 'all'", specifier = ">=0.4.0" },
     { name = "mixin-sensitivity", marker = "extra == 'sensitivity'", specifier = ">=0.4.0" },
 ]
-provides-extras = ["all", "logging", "sensitivity"]
+provides-extras = ["all", "cloudwatch", "logging", "sensitivity"]
 
 [package.metadata.requires-dev]
 dev = [

@@ -194,6 +194,147 @@ class TestMonitoredOnClass:
             monitored("test")(42)  # type: ignore
 
 
+class TestMonitoredLabels:
+    """@monitored with label injection callbacks."""
+
+    def setup_method(self) -> None:
+        """Clear registry before each test."""
+        MonitorRegistry.clear_default_sink()
+
+    def test_monitored_labels_from_result_success(self) -> None:
+        """@monitored with labels_from_result populates labels on success."""
+        sink = CollectingSink()
+
+        def extract_labels(result: object) -> tuple[tuple[str, str], ...]:
+            if isinstance(result, dict):
+                return (("status", result.get("status", "unknown")),)
+            return ()
+
+        @monitored(
+            "test.with_labels",
+            sink=sink,
+            labels_from_result=extract_labels,
+        )
+        def fn_success() -> dict:
+            return {"status": "completed", "items": 5}
+
+        result = fn_success()
+        assert result == {"status": "completed", "items": 5}
+        assert len(sink.events) == 1
+        assert sink.events[0].outcome == Outcome.SUCCESS
+        assert sink.events[0].labels == (("status", "completed"),)
+
+    def test_monitored_labels_from_exc_failure(self) -> None:
+        """@monitored with labels_from_exc populates labels on failure."""
+        sink = CollectingSink()
+
+        def extract_error_labels(exc: BaseException) -> tuple[tuple[str, str], ...]:
+            return (("error_type", type(exc).__name__),)
+
+        @monitored(
+            "test.with_error_labels",
+            sink=sink,
+            labels_from_exc=extract_error_labels,
+        )
+        def fn_failure() -> None:
+            raise ValueError("test error message")
+
+        with pytest.raises(ValueError):
+            fn_failure()
+
+        assert len(sink.events) == 1
+        assert sink.events[0].outcome == Outcome.FAILURE
+        assert sink.events[0].labels == (("error_type", "ValueError"),)
+
+    def test_monitored_labels_default_empty(self) -> None:
+        """@monitored without label callbacks has empty labels by default."""
+        sink = CollectingSink()
+
+        @monitored("test.no_labels", sink=sink)
+        def fn_no_labels() -> str:
+            return "result"
+
+        fn_no_labels()
+        assert len(sink.events) == 1
+        assert sink.events[0].labels == ()
+
+    def test_monitored_labels_async_success(self) -> None:
+        """@monitored with async function and labels_from_result."""
+        sink = CollectingSink()
+
+        def extract_labels(result: object) -> tuple[tuple[str, str], ...]:
+            if isinstance(result, str):
+                return (("length", str(len(result))),)
+            return ()
+
+        @monitored(
+            "test.async_labels",
+            sink=sink,
+            labels_from_result=extract_labels,
+        )
+        async def async_fn() -> str:
+            await asyncio.sleep(0.001)
+            return "hello"
+
+        result = asyncio.run(async_fn())
+        assert result == "hello"
+        assert len(sink.events) == 1
+        assert sink.events[0].labels == (("length", "5"),)
+
+    def test_monitored_labels_async_failure(self) -> None:
+        """@monitored with async function and labels_from_exc."""
+        sink = CollectingSink()
+
+        def extract_error_labels(exc: BaseException) -> tuple[tuple[str, str], ...]:
+            return (("error_type", type(exc).__name__),)
+
+        @monitored(
+            "test.async_error_labels",
+            sink=sink,
+            labels_from_exc=extract_error_labels,
+        )
+        async def async_fn_failure() -> None:
+            await asyncio.sleep(0.001)
+            raise RuntimeError("async error")
+
+        with pytest.raises(RuntimeError):
+            asyncio.run(async_fn_failure())
+
+        assert len(sink.events) == 1
+        assert sink.events[0].labels == (("error_type", "RuntimeError"),)
+
+    def test_monitored_labels_on_class_methods(self) -> None:
+        """@monitored on class passes label callbacks to methods."""
+        sink = CollectingSink()
+
+        def extract_labels(result: object) -> tuple[tuple[str, str], ...]:
+            if isinstance(result, str) and result.startswith("success"):
+                return (("status", "ok"),)
+            return ()
+
+        @monitored(
+            "service",
+            sink=sink,
+            labels_from_result=extract_labels,
+        )
+        @dataclass(frozen=True, slots=True)
+        class Service:
+            """Service with label extraction."""
+
+            name: str
+
+            def execute(self) -> str:
+                return f"success: {self.name}"
+
+        service = Service(name="test_op")
+        result = service.execute()
+
+        assert result == "success: test_op"
+        assert len(sink.events) == 1
+        assert sink.events[0].event == "service.execute"
+        assert sink.events[0].labels == (("status", "ok"),)
+
+
 class TestMonitoredEdgeCases:
     """Edge cases and special scenarios."""
 
