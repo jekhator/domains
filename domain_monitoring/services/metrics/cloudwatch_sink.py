@@ -3,9 +3,20 @@
 from __future__ import annotations
 
 from datetime import datetime
+from typing import TypedDict
 
 from domain_monitoring.errors.constants import monitoring as const
-from domain_monitoring.services.metrics.metrics_objects import MetricEvent, Outcome
+from domain_monitoring.services.metrics.metrics_objects import MetricEvent
+
+
+class _MetricDatapoint(TypedDict, total=False):
+    """Metric data point for AWS CloudWatch put_metric_data API."""
+
+    MetricName: str
+    Value: float
+    Unit: str
+    Timestamp: datetime
+    Dimensions: list[dict[str, str]]
 
 
 class CloudWatchMetricSink:
@@ -34,17 +45,16 @@ class CloudWatchMetricSink:
         Args:
             event: MetricEvent with outcome, duration, and labels.
         """
+        metric_point: _MetricDatapoint = {
+            "MetricName": event.event,
+            "Value": event.duration_ms,
+            "Unit": "Milliseconds",
+            "Timestamp": datetime.fromisoformat(event.occurred_at),
+            "Dimensions": self._build_dimensions(event),
+        }
         self._cloudwatch.put_metric_data(
             Namespace=self.namespace,
-            MetricData=[
-                {
-                    "MetricName": event.event,
-                    "Value": event.duration_ms,
-                    "Unit": "Milliseconds",
-                    "Timestamp": datetime.fromisoformat(event.occurred_at),
-                    "Dimensions": self._build_dimensions(event),
-                }
-            ],
+            MetricData=[metric_point],
         )
 
     @staticmethod
