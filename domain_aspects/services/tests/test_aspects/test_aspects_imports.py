@@ -4,7 +4,18 @@ from __future__ import annotations
 
 import pytest
 
+import domain_aspects
 from domain_aspects.services.aspects import aspects_objects as objs
+
+
+class TestPublicAPI:
+    """Test public API exports."""
+
+    def test_monitored_in_public_api(self) -> None:
+        """Monitored is exported from domain_aspects root."""
+        assert hasattr(domain_aspects, "Monitored")
+        assert "Monitored" in domain_aspects.__all__
+        assert domain_aspects.Monitored is objs.Monitored
 
 
 class TestLazyImports:
@@ -67,6 +78,17 @@ class TestLazyImports:
         with pytest.raises(ImportError, match="domain-errors not installed"):
             entry.build()
 
+    def test_monitored_build_missing_domain_monitoring(self, monkeypatch) -> None:
+        """Monitored.build() raises clear error when domain-monitoring missing."""
+        entry = objs.Monitored(event="metric")
+
+        def mock_import(*args, **kwargs):
+            raise ModuleNotFoundError("No module named 'domain_monitoring'")
+
+        monkeypatch.setattr("builtins.__import__", mock_import)
+        with pytest.raises(ImportError, match="domain-monitoring not installed"):
+            entry.build()
+
     def test_sensitive_build_missing_mixin_sensitivity(self, monkeypatch) -> None:
         """Sensitive.build() raises clear error when mixin-sensitivity missing."""
         entry = objs.Sensitive()
@@ -82,11 +104,12 @@ class TestLazyImports:
         """Entry objects fully validatable without importing optional deps."""
         entries: list[objs.AspectEntry] = [
             objs.Logged(event="test"),
+            objs.Monitored(event="metric"),
             objs.Requires(permission="read"),
+            objs.Sensitive(),
             objs.TenantScoped(param_name="tenant_id"),
             objs.Throttled(scope="api", rate="100/hour"),
             objs.WrapErrors(as_=ValueError),
-            objs.Sensitive(),
         ]
         for entry in entries:
             assert entry.kind is not None
