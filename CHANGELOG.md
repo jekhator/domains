@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- **domain-aspects export**: Added missing `Monitored` aspect entry to root `__all__` and public imports; previously implemented but unreachable from `from domain_aspects import Monitored`. Added lockstep test verifying public API export.
+- **Per-root version consistency**: Unified all six domain roots (`domain_errors`, `domain_security`, `domain_api_limiter`, `domain_monitoring`, `domain_aspects`, `domain_rag`) to report identical `__version__ = "0.2.0"`. Added cross-root version consistency test to prevent future drift.
+
 ## [0.2.0] - 2026-07-14
 
 ### Added
