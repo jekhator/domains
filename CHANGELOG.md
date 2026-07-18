@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- **domain-monitoring label injection**: `@monitored` decorator now accepts opt-in `labels_from_result` and `labels_from_exc` callbacks to populate metric event labels dynamically on success and failure. Callbacks receive result or exception and return tuple of (key, value) label pairs; absent callbacks default to empty labels for backward compatibility. Works with sync/async callables and class decoration with method fan-out.
+- **CloudWatchMetricSink**: Production-ready metric sink emitting `MetricEvent` to AWS CloudWatch via boto3. Accessible via optional `domain-suite[cloudwatch]` dependency; raises clear ImportError if boto3 missing. Emits metric name, duration, outcome dimension, and any label dimensions to CloudWatch. Uses configurable namespace (default: `domain-monitoring`).
+
 ## [0.2.0] - 2026-07-14
 
 ### Added

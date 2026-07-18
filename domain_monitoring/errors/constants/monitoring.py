@@ -15,3 +15,9 @@ ERR_MONITORING_INVALID_TARGET: Final = (
 """Empty class decoration."""
 
 ERR_MONITORING_EMPTY_CLASS: Final = "Cannot monitor class with no public methods"
+
+"""Missing optional dependencies."""
+
+ERR_MONITORING_BOTO3_MISSING: Final = (
+    "CloudWatch sink requires boto3; install with: pip install domain-suite[cloudwatch]"
+)
