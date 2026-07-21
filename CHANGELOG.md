@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.3.1] - 2026-07-18
+
+### Fixed
+
+- **Optional-dependency extras repoint**: Fixed broken `[logging]`, `[sensitivity]`, and `[all]` extras in pyproject.toml that incorrectly referenced non-existent standalone distributions `mixin-logging>=0.6.0` and `mixin-sensitivity>=0.4.0` (import roots exist only inside mixin-suite). Repointed all extras to `mixin-suite>=0.3.0` for correct PyPI resolution; `[all]` now also includes `boto3>=1.28.0` for cloudwatch sink access.
+- **Constants sweep in domain-monitoring**: Extracted magic strings from `domain_monitoring/services/metrics/cloudwatch_sink.py` into module constants: `DEFAULT_CLOUDWATCH_NAMESPACE` ("domain-monitoring"), `CLOUDWATCH_METRIC_UNIT` ("Milliseconds"), `CLOUDWATCH_DIMENSION_OUTCOME` ("Outcome") in `domain_monitoring/services/constants/metrics.py`. CloudWatchMetricSink now uses named constants instead of inline strings for namespace default and metric field values; AWS API boundary TypedDict keys and put_metric_data kwargs left untouched (API contract).
+- **Strict-suite CI pin upgrade to 0.3.0**: Updated `.github/workflows/strict-module.yml` strict-module and loc-cap invocations from `strict-suite==0.2.0` to `strict-suite==0.3.0`; R001-R011 rule set unchanged so no new violations surface; all six domain roots remain fully compliant.
+
 ## [0.3.0] - 2026-07-17
 
 ### Added
