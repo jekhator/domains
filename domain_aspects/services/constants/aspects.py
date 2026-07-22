@@ -94,15 +94,15 @@ ERR_ASPECT_LOGGED_IMPORT_MISSING: Final = (
 )
 
 ERR_ASPECT_REQUIRES_IMPORT_MISSING: Final = (
-    "domain-security not installed; add [security] extra."
+    "domain-security not installed; reinstall domain-suite."
 )
 
 ERR_ASPECT_TENANT_SCOPED_IMPORT_MISSING: Final = (
-    "domain-security not installed; add [security] extra."
+    "domain-security not installed; reinstall domain-suite."
 )
 
 ERR_ASPECT_THROTTLED_IMPORT_MISSING: Final = (
-    "domain-api-limiter not installed; add [throttle] extra."
+    "domain-api-limiter not installed; reinstall domain-suite."
 )
 
 ERR_ASPECT_WRAP_ERRORS_IMPORT_MISSING: Final = (
