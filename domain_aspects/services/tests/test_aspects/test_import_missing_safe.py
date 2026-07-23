@@ -42,7 +42,9 @@ class TestImportMissingSafe:
 
         monkeypatch.setitem(sys.modules, "domain_security", None)
         monkeypatch.setitem(sys.modules, "domain_security.decorators", None)
-        monkeypatch.setitem(sys.modules, "domain_security.decorators.tenant_scoped", None)
+        monkeypatch.setitem(
+            sys.modules, "domain_security.decorators.tenant_scoped", None
+        )
 
         with pytest.raises(ImportError, match="domain-security not installed"):
             entry.build()
@@ -53,7 +55,9 @@ class TestImportMissingSafe:
 
         monkeypatch.setitem(sys.modules, "domain_api_limiter", None)
         monkeypatch.setitem(sys.modules, "domain_api_limiter.decorators", None)
-        monkeypatch.setitem(sys.modules, "domain_api_limiter.decorators.throttled", None)
+        monkeypatch.setitem(
+            sys.modules, "domain_api_limiter.decorators.throttled", None
+        )
 
         with pytest.raises(ImportError, match="domain-api-limiter not installed"):
             entry.build()
@@ -74,7 +78,9 @@ class TestImportMissingSafe:
         monkeypatch.setitem(sys.modules, "domain_monitoring", None)
         monkeypatch.setitem(sys.modules, "domain_monitoring.decorators", None)
         monkeypatch.setitem(sys.modules, "domain_monitoring.decorators.monitored", None)
-        monkeypatch.setitem(sys.modules, "domain_monitoring.decorators.monitored.monitored_client", None)
+        monkeypatch.setitem(
+            sys.modules, "domain_monitoring.decorators.monitored.monitored_client", None
+        )
 
         with pytest.raises(ImportError, match="domain-monitoring not installed"):
             entry.build()

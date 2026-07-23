@@ -133,6 +133,7 @@ class TestAmbientLoggingSync:
 
     def test_logged_sync_ambient_with_bad_result_extractor(self) -> None:
         """Logged sync ambient logs extraction failure in .end path."""
+
         def extract_result(result) -> dict:
             raise RuntimeError("extraction broke")
 
@@ -151,6 +152,7 @@ class TestAmbientLoggingSync:
 
     def test_logged_sync_ambient_with_bad_error_extractor(self) -> None:
         """Logged sync ambient logs extraction failure in .error path."""
+
         def extract_exc(exc: BaseException) -> dict:
             raise RuntimeError("error extraction broke")
 
@@ -174,6 +176,7 @@ class TestSyncExtractionFailures:
 
     def test_logged_sync_result_extraction_failure_continues(self) -> None:
         """Sync logged handles payload_from_result exception and continues (lines 382-387)."""
+
         def bad_result_extractor(result) -> dict:
             raise RuntimeError("extraction failure")
 
@@ -193,6 +196,7 @@ class TestSyncExtractionFailures:
 
     def test_logged_sync_result_extraction_failure_end_logged_ambient(self) -> None:
         """Sync logged .end emitted even when payload_from_result fails (line 390 ambient)."""
+
         def bad_extractor(result) -> dict:
             raise RuntimeError("extraction error")
 
@@ -212,6 +216,7 @@ class TestSyncExtractionFailures:
 
     def test_logged_sync_error_extraction_failure_ambient(self) -> None:
         """Sync logged .error emitted even when payload_from_exc fails (line 409 ambient)."""
+
         def bad_error_extractor(exc: BaseException) -> dict:
             raise RuntimeError("error extraction error")
 
@@ -310,6 +315,7 @@ class TestAsyncExtractionFailures:
 
     def test_logged_async_result_extraction_failure(self) -> None:
         """Async logged handles payload_from_result exception (lines 316-324)."""
+
         def bad_result_extractor(result) -> dict:
             raise RuntimeError("result extraction failed")
 
@@ -333,6 +339,7 @@ class TestAsyncExtractionFailures:
 
     def test_logged_async_error_extraction_failure(self) -> None:
         """Async logged handles payload_from_exc exception."""
+
         def bad_error_extractor(exc: BaseException) -> dict:
             raise RuntimeError("error extraction failed")
 

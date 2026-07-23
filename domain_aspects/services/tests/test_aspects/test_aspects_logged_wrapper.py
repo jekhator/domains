@@ -40,6 +40,7 @@ class TestLoggedWrapperSync:
 
     def test_logged_wrapper_with_payload_extractors(self) -> None:
         """Logged wrapper processes payload extractors without errors."""
+
         def extract_request(x: int) -> dict:
             return {"input": x}
 
@@ -63,6 +64,7 @@ class TestLoggedWrapperSync:
 
     def test_logged_wrapper_guards_extraction_failures(self) -> None:
         """Logged wrapper guards against extraction errors and continues."""
+
         def bad_extractor(x: int) -> dict:
             raise RuntimeError("extraction failed")
 
@@ -79,7 +81,6 @@ class TestLoggedWrapperSync:
         result = wrapped(5)
 
         assert result == 10
-
 
 
 class TestLoggedWrapperAsync:
@@ -117,5 +118,3 @@ class TestLoggedWrapperAsync:
                 await wrapped(5)
 
         asyncio.run(run_test())
-
-

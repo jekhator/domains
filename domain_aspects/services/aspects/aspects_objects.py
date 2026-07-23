@@ -284,6 +284,7 @@ def _build_logged_wrapper(
     from mixin_logging import LoggingMixin, log_error, log_info
 
     if asyncio.iscoroutinefunction(target):
+
         @functools.wraps(target)
         async def async_logged(*args: Any, **kwargs: Any) -> Any:
             logger = None
@@ -347,6 +348,7 @@ def _build_logged_wrapper(
 
         return async_logged
     else:
+
         @functools.wraps(target)
         def sync_logged(*args: Any, **kwargs: Any) -> Any:
             logger = None
@@ -485,18 +487,19 @@ def _build_retried_wrapper(
         return wrapped_fn
     else:
         if asyncio.iscoroutinefunction(target):
+
             @functools.wraps(target)
-            async def async_wrapper_dynamic(
-                *args: Any, **kwargs: Any
-            ) -> Any:
+            async def async_wrapper_dynamic(*args: Any, **kwargs: Any) -> Any:
                 call_policy = policy_from_request(*args, **kwargs)
                 if call_policy is None:
                     return await target(*args, **kwargs)
                 wrapped_fn = executor.wrap(target, call_policy)
                 return await wrapped_fn(*args, **kwargs)
+
             setattr(async_wrapper_dynamic, RETRIED_MARKER, True)
             return async_wrapper_dynamic
         else:
+
             @functools.wraps(target)
             def sync_wrapper_dynamic(*args: Any, **kwargs: Any) -> Any:
                 call_policy = policy_from_request(*args, **kwargs)
@@ -504,6 +507,7 @@ def _build_retried_wrapper(
                     return target(*args, **kwargs)
                 wrapped_fn = executor.wrap(target, call_policy)
                 return wrapped_fn(*args, **kwargs)
+
             setattr(sync_wrapper_dynamic, RETRIED_MARKER, True)
             return sync_wrapper_dynamic
 

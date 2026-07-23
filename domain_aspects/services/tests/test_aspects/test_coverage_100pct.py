@@ -159,6 +159,7 @@ class TestRetriedBothForms:
 
     def test_retried_dynamic_with_none_policy(self) -> None:
         """Retried dynamic selector returns None, no retry."""
+
         def selector(*args, **kwargs) -> None:
             return None
 

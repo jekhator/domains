@@ -119,9 +119,7 @@ ERR_ASPECT_MONITORED_IMPORT_MISSING: Final = (
     "domain-monitoring not installed; it is a hard dependency."
 )
 
-ERR_ASPECT_RETRIED_POLICY_REQUIRED: Final = (
-    "Retried must specify exactly one of: policy (static) or policy_from_request (dynamic)."
-)
+ERR_ASPECT_RETRIED_POLICY_REQUIRED: Final = "Retried must specify exactly one of: policy (static) or policy_from_request (dynamic)."
 
 ERR_ASPECT_RETRIED_POLICY_FROM_REQUEST_REQUIRED: Final = (
     "Retried.policy_from_request must be a callable that returns RetryPolicy or None."

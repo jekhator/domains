@@ -38,6 +38,7 @@ class TestRetriedWrapperSync:
 
     def test_retried_wrapper_retries_on_predicate_match(self) -> None:
         """Retried wrapper retries when predicate matches."""
+
         def should_retry(exc: BaseException) -> bool:
             return isinstance(exc, ValueError)
 
@@ -69,6 +70,7 @@ class TestRetriedWrapperSync:
 
     def test_retried_wrapper_exhausts_retries(self) -> None:
         """Retried wrapper raises after exhausting retries."""
+
         def should_retry(exc: BaseException) -> bool:
             return isinstance(exc, ValueError)
 
@@ -93,6 +95,7 @@ class TestRetriedWrapperSync:
 
     def test_retried_wrapper_with_dynamic_policy_selector(self) -> None:
         """Retried wrapper uses dynamic policy from selector."""
+
         def policy_selector(value: int) -> RetryPolicy | None:
             if value > 0:
                 return RetryPolicy(
@@ -125,6 +128,7 @@ class TestRetriedWrapperSync:
 
     def test_retried_wrapper_with_selector_returns_none(self) -> None:
         """Retried wrapper skips retries when selector returns None."""
+
         def policy_selector(value: int) -> RetryPolicy | None:
             return None
 
@@ -138,5 +142,3 @@ class TestRetriedWrapperSync:
 
         with pytest.raises(ValueError, match="no retry"):
             wrapped(5)
-
-

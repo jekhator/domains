@@ -325,7 +325,7 @@ class TestAspectsIntegration:
                 objs.TenantScoped(param_name="tenant_id"),
                 objs.Throttled(scope="api", rate="100/hour"),
                 objs.WrapErrors(as_=ValueError),
-                }
+            }
         )
         aspects_svc = client_module.Aspects()
         decorator = aspects_svc(all_aspects)  # type: ignore[arg-type]
