@@ -33,7 +33,11 @@ path = "domain_errors/config/_version.py"
 
 [tool.hatch.build.targets.wheel]
 packages = ["domain_errors", "domain_security", "domain_api_limiter", "domain_monitoring", "domain_aspects", "domain_rag"]
-exclude = ["domain_*/**/tests"]
+exclude = [
+    "domain_*/**/tests",
+    "domain_*/**/conftest.py",
+    "domain_*/common/constants/tests.py"
+]
 
 [tool.pytest.ini_options]
 testpaths = ["domain_errors", "domain_security", "domain_api_limiter", "domain_monitoring", "domain_aspects", "domain_rag"]
