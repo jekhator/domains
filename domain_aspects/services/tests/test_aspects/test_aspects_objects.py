@@ -269,3 +269,87 @@ class TestEntryHashability:
         d = {entry1: "logged", entry2: "requires"}
         assert d[entry1] == "logged"
         assert d[entry2] == "requires"
+
+
+class TestRetried:
+    """Test Retried entry object."""
+
+    def test_retried_with_static_policy(self) -> None:
+        """Create Retried with static retry policy."""
+        from mixin_retry import RetryPolicy
+
+        policy = RetryPolicy(
+            max_attempts=3,
+            backoff_base_seconds=0.1,
+            backoff_multiplier=2.0,
+            backoff_max_seconds=10.0,
+            jitter=True,
+        )
+        entry = objs.Retried(policy=policy)
+        assert entry.policy is policy
+        assert entry.policy_from_request is None
+        assert entry.kind == objs.AspectKind.RETRIED
+
+    def test_retried_with_dynamic_policy_selector(self) -> None:
+        """Create Retried with dynamic policy selector."""
+
+        def selector(*args: object, **kwargs: object) -> object:
+            return None
+
+        entry = objs.Retried(policy_from_request=selector)
+        assert entry.policy is None
+        assert entry.policy_from_request is selector
+        assert entry.kind == objs.AspectKind.RETRIED
+
+    def test_retried_neither_policy_raises(self) -> None:
+        """Retried with neither policy raises ValueError."""
+        with pytest.raises(ValueError, match="exactly one"):
+            objs.Retried()
+
+    def test_retried_both_policies_raises(self) -> None:
+        """Retried with both policy and selector raises ValueError."""
+        from mixin_retry import RetryPolicy
+
+        policy = RetryPolicy(
+            max_attempts=3,
+            backoff_base_seconds=0.1,
+            backoff_multiplier=2.0,
+            backoff_max_seconds=10.0,
+            jitter=True,
+        )
+
+        def selector(*args: object, **kwargs: object) -> object:
+            return None
+
+        with pytest.raises(ValueError, match="both"):
+            objs.Retried(policy=policy, policy_from_request=selector)
+
+    def test_retried_is_frozen(self) -> None:
+        """Retried is frozen dataclass."""
+        from mixin_retry import RetryPolicy
+
+        policy = RetryPolicy(
+            max_attempts=3,
+            backoff_base_seconds=0.1,
+            backoff_multiplier=2.0,
+            backoff_max_seconds=10.0,
+            jitter=True,
+        )
+        entry = objs.Retried(policy=policy)
+        with pytest.raises(AttributeError):
+            entry.policy = None  # type: ignore
+
+    def test_retried_hashable(self) -> None:
+        """Retried is hashable for frozenset membership."""
+        from mixin_retry import RetryPolicy
+
+        policy = RetryPolicy(
+            max_attempts=3,
+            backoff_base_seconds=0.1,
+            backoff_multiplier=2.0,
+            backoff_max_seconds=10.0,
+            jitter=True,
+        )
+        entry1 = objs.Retried(policy=policy)
+        entry2 = objs.Retried(policy=policy)
+        assert hash(entry1) == hash(entry2)

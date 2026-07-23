@@ -29,10 +29,16 @@ __all__ = [
     "ERR_ASPECT_WRAP_ERRORS_IMPORT_MISSING",
     "ERR_ASPECT_MONITORED_IMPORT_MISSING",
     "ERR_ASPECT_SENSITIVE_IMPORT_MISSING",
+    "ERR_ASPECT_RETRIED_POLICY_REQUIRED",
+    "ERR_ASPECT_RETRIED_POLICY_FROM_REQUEST_REQUIRED",
+    "ERR_ASPECT_RETRIED_BOTH_POLICIES_PROVIDED",
 ]
 
 
-"""Aspect application order (innermost-to-outermost: WRAP_ERRORS innermost, LOGGED outermost)."""
+"""Aspect application order (outermost to innermost: LOGGED → REQUIRES → TENANT_SCOPED → THROTTLED → MONITORED → SENSITIVE → WRAP_ERRORS → RETRIED innermost).
+
+RETRIED is placed innermost so retries see raw exceptions for predicate matching, before WRAP_ERRORS converts them.
+"""
 
 ASPECT_ORDER: Final = (
     "LOGGED",
@@ -42,6 +48,7 @@ ASPECT_ORDER: Final = (
     "MONITORED",
     "SENSITIVE",
     "WRAP_ERRORS",
+    "RETRIED",
 )
 
 
@@ -115,4 +122,16 @@ ERR_ASPECT_MONITORED_IMPORT_MISSING: Final = (
 
 ERR_ASPECT_SENSITIVE_IMPORT_MISSING: Final = (
     "mixin-sensitivity not installed; add [sensitivity] extra."
+)
+
+ERR_ASPECT_RETRIED_POLICY_REQUIRED: Final = (
+    "Retried must specify exactly one of: policy (static) or policy_from_request (dynamic)."
+)
+
+ERR_ASPECT_RETRIED_POLICY_FROM_REQUEST_REQUIRED: Final = (
+    "Retried.policy_from_request must be a callable that returns RetryPolicy or None."
+)
+
+ERR_ASPECT_RETRIED_BOTH_POLICIES_PROVIDED: Final = (
+    "Retried cannot specify both policy and policy_from_request; use only one."
 )

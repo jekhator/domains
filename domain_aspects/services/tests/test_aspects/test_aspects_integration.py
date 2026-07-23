@@ -145,15 +145,15 @@ class TestRealDepsIntegration:
         with pytest.raises(TenancyError):
             service.tenant_method(tenant_id="test")
 
-    def test_sensitive_real_sig_repr_masking(self) -> None:
-        """Sensitive applies mixin-sensitivity repr masking to class."""
+    def test_sensitive_real_sig_noop_in_0_5_0(self) -> None:
+        """Sensitive is a no-op in mixin-suite 0.5.0; sensitivity via SensitiveRepr."""
         from dataclasses import field
 
-        from mixin_sensitivity import Sensitivity
+        from mixin_sensitivity import SensitiveRepr, Sensitivity
 
         @aspects(objs.Sensitive())
-        @dataclass(frozen=True, slots=True)
-        class Credentials:
+        @dataclass(frozen=True, slots=True, repr=False)
+        class Credentials(SensitiveRepr):
             username: str
             password: str = field(metadata={"sensitivity": Sensitivity.SECRET})
 
