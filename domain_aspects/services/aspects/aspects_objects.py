@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import asyncio
 import functools
+import inspect
 from collections.abc import Callable
 from dataclasses import dataclass
 from enum import StrEnum
@@ -17,6 +18,9 @@ if TYPE_CHECKING:
     from domain_monitoring.services.metrics.metrics_client import MetricSink
 
 T = TypeVar("T")
+
+LOGGED_MARKER = "__logged_applied__"
+RETRIED_MARKER = "__retried_applied__"
 
 
 class AspectKind(StrEnum):
@@ -53,7 +57,7 @@ class Logged:
         return AspectKind.LOGGED
 
     def build(self) -> Callable:
-        """Build native logged wrapper for function/method targets."""
+        """Build native logged wrapper for function/method or class targets."""
         event = self.event
         payload_from_request = self.payload_from_request
         payload_from_result = self.payload_from_result
@@ -61,6 +65,15 @@ class Logged:
         timed = self.timed
 
         def decorator(target: Callable) -> Callable:
+            if inspect.isclass(target):
+                return _decorate_class_logged(
+                    target,
+                    event,
+                    payload_from_request,
+                    payload_from_result,
+                    payload_from_exc,
+                    timed,
+                )
             return _build_logged_wrapper(
                 target,
                 event,
@@ -240,34 +253,17 @@ class Retried:
         policy_from_request = self.policy_from_request
 
         def decorator(target: Callable) -> Callable:
-            from mixin_retry import RetryExecutor
-
-            executor = RetryExecutor()
-
-            if policy is not None:
-                wrapped_fn = executor.wrap(target, policy)
-                return wrapped_fn
-            else:
-                if asyncio.iscoroutinefunction(target):
-                    @functools.wraps(target)
-                    async def async_wrapper_dynamic(
-                        *args: Any, **kwargs: Any
-                    ) -> Any:
-                        call_policy = policy_from_request(*args, **kwargs)
-                        if call_policy is None:
-                            return await target(*args, **kwargs)
-                        wrapped_fn = executor.wrap(target, call_policy)
-                        return await wrapped_fn(*args, **kwargs)
-                    return async_wrapper_dynamic
-                else:
-                    @functools.wraps(target)
-                    def sync_wrapper_dynamic(*args: Any, **kwargs: Any) -> Any:
-                        call_policy = policy_from_request(*args, **kwargs)
-                        if call_policy is None:
-                            return target(*args, **kwargs)
-                        wrapped_fn = executor.wrap(target, call_policy)
-                        return wrapped_fn(*args, **kwargs)
-                    return sync_wrapper_dynamic
+            if inspect.isclass(target):
+                return _decorate_class_retried(
+                    target,
+                    policy,
+                    policy_from_request,
+                )
+            return _build_retried_wrapper(
+                target,
+                policy,
+                policy_from_request,
+            )
 
         return decorator
 
@@ -413,6 +409,154 @@ def _build_logged_wrapper(
                 raise
 
         return sync_logged
+
+
+def _decorate_class_logged(
+    cls: type[Any],
+    event: str,
+    payload_from_request: Optional[Callable[..., dict]],
+    payload_from_result: Optional[Callable[[object], dict]],
+    payload_from_exc: Optional[Callable[[BaseException], dict]],
+    timed: bool,
+) -> type[Any]:
+    """Fan out @logged over all public methods in the class.
+
+    Rules:
+    - Only methods in cls.__dict__ (not inherited)
+    - Skip: _-prefixed, dunders, properties, nested classes
+    - Preserve: classmethod/staticmethod via unwrap/rewrap
+    - Override: methods already marked with LOGGED_MARKER are left untouched
+    """
+    for name, method in list(cls.__dict__.items()):
+        if name.startswith("_"):
+            continue
+        if isinstance(method, property):
+            continue
+        if isinstance(method, type):
+            continue
+
+        is_classmethod = isinstance(method, classmethod)
+        is_staticmethod = isinstance(method, staticmethod)
+
+        if is_classmethod or is_staticmethod:
+            unwrapped = method.__func__
+        else:
+            unwrapped = method
+
+        if not callable(unwrapped):
+            continue
+
+        if hasattr(unwrapped, LOGGED_MARKER):
+            continue
+
+        decorated = _build_logged_wrapper(
+            unwrapped,
+            event,
+            payload_from_request,
+            payload_from_result,
+            payload_from_exc,
+            timed,
+        )
+        setattr(decorated, LOGGED_MARKER, True)
+
+        if is_classmethod:
+            setattr(cls, name, classmethod(decorated))
+        elif is_staticmethod:
+            setattr(cls, name, staticmethod(decorated))
+        else:
+            setattr(cls, name, decorated)
+
+    return cls
+
+
+def _build_retried_wrapper(
+    target: Callable,
+    policy: Optional[RetryPolicy],
+    policy_from_request: Optional[Callable[..., Optional[RetryPolicy]]],
+) -> Callable:
+    """Build retry wrapper for a single callable with optional dynamic policy."""
+    from mixin_retry import RetryExecutor
+
+    executor = RetryExecutor()
+
+    if policy is not None:
+        wrapped_fn = executor.wrap(target, policy)
+        setattr(wrapped_fn, RETRIED_MARKER, True)
+        return wrapped_fn
+    else:
+        if asyncio.iscoroutinefunction(target):
+            @functools.wraps(target)
+            async def async_wrapper_dynamic(
+                *args: Any, **kwargs: Any
+            ) -> Any:
+                call_policy = policy_from_request(*args, **kwargs)
+                if call_policy is None:
+                    return await target(*args, **kwargs)
+                wrapped_fn = executor.wrap(target, call_policy)
+                return await wrapped_fn(*args, **kwargs)
+            setattr(async_wrapper_dynamic, RETRIED_MARKER, True)
+            return async_wrapper_dynamic
+        else:
+            @functools.wraps(target)
+            def sync_wrapper_dynamic(*args: Any, **kwargs: Any) -> Any:
+                call_policy = policy_from_request(*args, **kwargs)
+                if call_policy is None:
+                    return target(*args, **kwargs)
+                wrapped_fn = executor.wrap(target, call_policy)
+                return wrapped_fn(*args, **kwargs)
+            setattr(sync_wrapper_dynamic, RETRIED_MARKER, True)
+            return sync_wrapper_dynamic
+
+
+def _decorate_class_retried(
+    cls: type[Any],
+    policy: Optional[RetryPolicy],
+    policy_from_request: Optional[Callable[..., Optional[RetryPolicy]]],
+) -> type[Any]:
+    """Fan out @retried over all public methods in the class.
+
+    Rules:
+    - Only methods in cls.__dict__ (not inherited)
+    - Skip: _-prefixed, dunders, properties, nested classes
+    - Preserve: classmethod/staticmethod via unwrap/rewrap
+    - Override: methods already marked with RETRIED_MARKER are left untouched
+    """
+    for name, method in list(cls.__dict__.items()):
+        if name.startswith("_"):
+            continue
+        if isinstance(method, property):
+            continue
+        if isinstance(method, type):
+            continue
+
+        is_classmethod = isinstance(method, classmethod)
+        is_staticmethod = isinstance(method, staticmethod)
+
+        if is_classmethod or is_staticmethod:
+            unwrapped = method.__func__
+        else:
+            unwrapped = method
+
+        if not callable(unwrapped):
+            continue
+
+        if hasattr(unwrapped, RETRIED_MARKER):
+            continue
+
+        decorated = _build_retried_wrapper(
+            unwrapped,
+            policy,
+            policy_from_request,
+        )
+
+        if is_classmethod:
+            setattr(cls, name, classmethod(decorated))
+        elif is_staticmethod:
+            setattr(cls, name, staticmethod(decorated))
+        else:
+            setattr(cls, name, decorated)
+
+    return cls
 
 
 AspectEntry = (
