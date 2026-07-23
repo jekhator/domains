@@ -3,9 +3,9 @@
 from __future__ import annotations
 
 import asyncio
-from mixin_retry import RetryPolicy
 
 import pytest
+from mixin_retry import RetryPolicy
 
 from domain_aspects.services.aspects import aspects_objects as objs
 from domain_aspects.services.aspects.aspects_client import Aspects

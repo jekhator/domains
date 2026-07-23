@@ -7,7 +7,6 @@ from typing import Any
 import pytest
 
 import domain_aspects
-
 from domain_aspects.errors.aspects_errors import AspectDeclarationError
 from domain_aspects.services.aspects import (
     aspects_client as client_module,

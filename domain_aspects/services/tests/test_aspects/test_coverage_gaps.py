@@ -10,7 +10,6 @@ from mixin_retry import RetryPolicy
 
 from domain_aspects.services.aspects import aspects_objects as objs
 
-
 ERR_ASYNC_RETRIED_NO_RETRY = "async.retried.none.policy"
 
 
