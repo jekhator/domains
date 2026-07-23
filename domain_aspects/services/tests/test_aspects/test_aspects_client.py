@@ -6,12 +6,36 @@ from typing import Any
 
 import pytest
 
+import domain_aspects
+
 from domain_aspects.errors.aspects_errors import AspectDeclarationError
 from domain_aspects.services.aspects import (
     aspects_client as client_module,
     aspects_objects as objs,
 )
 from domain_aspects.services.constants import aspects as const
+
+
+class TestPublicAPI:
+    """Test public API exports."""
+
+    def test_monitored_in_public_api(self) -> None:
+        """Monitored is exported from domain_aspects root."""
+        assert hasattr(domain_aspects, "Monitored")
+        assert "Monitored" in domain_aspects.__all__
+        assert domain_aspects.Monitored is objs.Monitored
+
+    def test_retried_in_public_api(self) -> None:
+        """Retried is exported from domain_aspects root."""
+        assert hasattr(domain_aspects, "Retried")
+        assert "Retried" in domain_aspects.__all__
+        assert domain_aspects.Retried is objs.Retried
+
+    def test_aspect_order_in_public_api(self) -> None:
+        """ASPECT_ORDER is exported from domain_aspects root."""
+        assert hasattr(domain_aspects, "ASPECT_ORDER")
+        assert "ASPECT_ORDER" in domain_aspects.__all__
+        assert domain_aspects.ASPECT_ORDER is const.ASPECT_ORDER
 
 
 class TestAspectsFlatten:
