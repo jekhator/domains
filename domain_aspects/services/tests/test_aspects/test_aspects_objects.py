@@ -206,21 +206,6 @@ class TestWrapErrors:
         assert hash(entry1) == hash(entry2)
 
 
-class TestSensitive:
-    """Test Sensitive entry object."""
-
-    def test_sensitive_creation_happy_path(self) -> None:
-        """Create Sensitive entry."""
-        entry = objs.Sensitive()
-        assert entry.kind == objs.AspectKind.SENSITIVE
-
-    def test_sensitive_hashable(self) -> None:
-        """Sensitive is hashable for frozenset membership."""
-        entry1 = objs.Sensitive()
-        entry2 = objs.Sensitive()
-        assert hash(entry1) == hash(entry2)
-
-
 class TestAspectKindEnum:
     """Test AspectKind enumeration."""
 
@@ -232,7 +217,7 @@ class TestAspectKindEnum:
         assert objs.AspectKind.THROTTLED == "THROTTLED"
         assert objs.AspectKind.MONITORED == "MONITORED"
         assert objs.AspectKind.WRAP_ERRORS == "WRAP_ERRORS"
-        assert objs.AspectKind.SENSITIVE == "SENSITIVE"
+        assert objs.AspectKind.RETRIED == "RETRIED"
 
 
 class TestEntryHashability:
@@ -246,7 +231,6 @@ class TestEntryHashability:
         stub_throttled: objs.Throttled,
         stub_monitored: objs.Monitored,
         stub_wrap_errors: objs.WrapErrors,
-        stub_sensitive: objs.Sensitive,
     ) -> None:
         """All entries can be members of a frozenset."""
         entry_set = frozenset(
@@ -257,10 +241,9 @@ class TestEntryHashability:
                 stub_throttled,
                 stub_monitored,
                 stub_wrap_errors,
-                stub_sensitive,
             }
         )
-        assert len(entry_set) == 7
+        assert len(entry_set) == 6
 
     def test_entries_can_be_dict_keys(self) -> None:
         """All entries can be dict keys."""

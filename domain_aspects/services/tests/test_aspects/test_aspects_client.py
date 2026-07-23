@@ -57,16 +57,14 @@ class TestAspectsFlatten:
         entries = (
             objs.Logged(event="test"),
             entry_set,
-            objs.Sensitive(),
         )
         result = aspects_svc._flatten(entries)  # type: ignore[arg-type]
-        assert len(result) == 4
+        assert len(result) == 3
         kinds = {e.kind for e in result}
         assert kinds == {
             objs.AspectKind.LOGGED,
             objs.AspectKind.REQUIRES,
             objs.AspectKind.THROTTLED,
-            objs.AspectKind.SENSITIVE,
         }
 
 
@@ -146,10 +144,9 @@ class TestAspectsSort:
         throttled = objs.Throttled(scope="api", rate="100/hour")
         monitored = objs.Monitored(event="test.operation")
         wrap = objs.WrapErrors(as_=ValueError)
-        sensitive = objs.Sensitive()
-        entries = [wrap, logged, sensitive, requires, tenant, throttled, monitored]
+        entries = [wrap, logged, requires, tenant, throttled, monitored]
         result = aspects_svc._sort(entries)  # type: ignore[arg-type]
-        assert len(result) == 7
+        assert len(result) == 6
         kinds = [e.kind for e in result]
         assert kinds == [
             objs.AspectKind.LOGGED,
@@ -157,7 +154,6 @@ class TestAspectsSort:
             objs.AspectKind.TENANT_SCOPED,
             objs.AspectKind.THROTTLED,
             objs.AspectKind.MONITORED,
-            objs.AspectKind.SENSITIVE,
             objs.AspectKind.WRAP_ERRORS,
         ]
 
@@ -196,7 +192,6 @@ class TestAspectsCall:
         decorator = aspects_svc(
             objs.Logged(event="test"),
             entry_set,
-            objs.Sensitive(),
         )
         assert callable(decorator)
 
@@ -236,7 +231,7 @@ class TestAspectsCall:
         class ExampleClass:
             value: str = "example"
 
-        decorator = aspects_svc(objs.Sensitive())
+        decorator = aspects_svc(objs.Requires(permission="read"))
         decorated = decorator(ExampleClass)
         assert decorated is ExampleClass
 
@@ -283,7 +278,6 @@ class TestAspectsIntegration:
             objs.TenantScoped(param_name="tenant_id"),
             objs.Throttled(scope="api", rate="100/hour"),
             objs.WrapErrors(as_=ValueError),
-            objs.Sensitive(),
         )
         assert callable(decorator)
 
@@ -296,7 +290,6 @@ class TestAspectsIntegration:
             objs.TenantScoped(param_name="tenant_id"),
             objs.Throttled(scope="api", rate="100/hour"),
             objs.WrapErrors(as_=ValueError),
-            objs.Sensitive(),
         )
         assert callable(decorator)
 
@@ -309,8 +302,7 @@ class TestAspectsIntegration:
                 objs.TenantScoped(param_name="tenant_id"),
                 objs.Throttled(scope="api", rate="100/hour"),
                 objs.WrapErrors(as_=ValueError),
-                objs.Sensitive(),
-            }
+                }
         )
         aspects_svc = client_module.Aspects()
         decorator = aspects_svc(all_aspects)  # type: ignore[arg-type]

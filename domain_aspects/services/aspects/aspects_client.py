@@ -69,7 +69,6 @@ class Aspects:
                     objs.Throttled,
                     objs.Monitored,
                     objs.WrapErrors,
-                    objs.Sensitive,
                     objs.Retried,
                 ),
             ):

@@ -28,16 +28,16 @@ __all__ = [
     "ERR_ASPECT_THROTTLED_IMPORT_MISSING",
     "ERR_ASPECT_WRAP_ERRORS_IMPORT_MISSING",
     "ERR_ASPECT_MONITORED_IMPORT_MISSING",
-    "ERR_ASPECT_SENSITIVE_IMPORT_MISSING",
     "ERR_ASPECT_RETRIED_POLICY_REQUIRED",
     "ERR_ASPECT_RETRIED_POLICY_FROM_REQUEST_REQUIRED",
     "ERR_ASPECT_RETRIED_BOTH_POLICIES_PROVIDED",
 ]
 
 
-"""Aspect application order (outermost to innermost: LOGGED → REQUIRES → TENANT_SCOPED → THROTTLED → MONITORED → SENSITIVE → WRAP_ERRORS → RETRIED innermost).
+"""Aspect application order (outermost to innermost: LOGGED → REQUIRES → TENANT_SCOPED → THROTTLED → MONITORED → WRAP_ERRORS → RETRIED innermost).
 
 RETRIED is placed innermost so retries see raw exceptions for predicate matching, before WRAP_ERRORS converts them.
+Sensitivity is adopted client-side via mixin_sensitivity.SensitiveRepr (not a wrapper concern).
 """
 
 ASPECT_ORDER: Final = (
@@ -46,7 +46,6 @@ ASPECT_ORDER: Final = (
     "TENANT_SCOPED",
     "THROTTLED",
     "MONITORED",
-    "SENSITIVE",
     "WRAP_ERRORS",
     "RETRIED",
 )
@@ -118,10 +117,6 @@ ERR_ASPECT_WRAP_ERRORS_IMPORT_MISSING: Final = (
 
 ERR_ASPECT_MONITORED_IMPORT_MISSING: Final = (
     "domain-monitoring not installed; it is a hard dependency."
-)
-
-ERR_ASPECT_SENSITIVE_IMPORT_MISSING: Final = (
-    "mixin-sensitivity not installed; add [sensitivity] extra."
 )
 
 ERR_ASPECT_RETRIED_POLICY_REQUIRED: Final = (

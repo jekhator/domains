@@ -28,7 +28,6 @@ class AspectKind(StrEnum):
     THROTTLED = "THROTTLED"
     MONITORED = "MONITORED"
     WRAP_ERRORS = "WRAP_ERRORS"
-    SENSITIVE = "SENSITIVE"
     RETRIED = "RETRIED"
 
 
@@ -209,29 +208,6 @@ class Monitored:
             labels_from_result=self.labels_from_result,
             labels_from_exc=self.labels_from_exc,
         )
-
-
-@dataclass(frozen=True, slots=True)
-class Sensitive:
-    """Sensitive field masking via SensitiveRepr adoption (client-side).
-
-    In mixin-suite 0.5.0, @sensitive decorator is removed. Sensitivity is now adopted
-    client-side via dataclass inheritance from SensitiveRepr and field metadata.
-    This aspect is DEPRECATED and kept for backward compatibility only.
-    """
-
-    def __post_init__(self) -> None:
-        pass
-
-    @property
-    def kind(self) -> AspectKind:
-        return AspectKind.SENSITIVE
-
-    def build(self) -> Callable:
-        """No-op wrapper; client-side SensitiveRepr adoption replaces decorator."""
-        def identity_decorator(target: Callable) -> Callable:
-            return target
-        return identity_decorator
 
 
 @dataclass(frozen=True, slots=True)
@@ -440,6 +416,6 @@ def _build_logged_wrapper(
 
 
 AspectEntry = (
-    Logged | Requires | TenantScoped | Throttled | Monitored | WrapErrors | Sensitive | Retried
+    Logged | Requires | TenantScoped | Throttled | Monitored | WrapErrors | Retried
 )
 """Union type alias for all aspect entry types."""

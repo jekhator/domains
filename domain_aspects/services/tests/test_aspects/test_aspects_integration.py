@@ -145,23 +145,6 @@ class TestRealDepsIntegration:
         with pytest.raises(TenancyError):
             service.tenant_method(tenant_id="test")
 
-    def test_sensitive_real_sig_noop_in_0_5_0(self) -> None:
-        """Sensitive is a no-op in mixin-suite 0.5.0; sensitivity via SensitiveRepr."""
-        from dataclasses import field
-
-        from mixin_sensitivity import SensitiveRepr, Sensitivity
-
-        @aspects(objs.Sensitive())
-        @dataclass(frozen=True, slots=True, repr=False)
-        class Credentials(SensitiveRepr):
-            username: str
-            password: str = field(metadata={"sensitivity": Sensitivity.SECRET})
-
-        creds = Credentials(username="alice", password="secret123")
-        creds_repr = repr(creds)
-        assert "secret123" not in creds_repr
-        assert "alice" in creds_repr
-
     def test_monitored_real_sig(self) -> None:
         """Monitored calls monitored(event, sink) correctly via real dependency."""
 
