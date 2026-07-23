@@ -264,8 +264,9 @@ class TestRealDepsIntegration:
         WrapErrors sits outside and would convert final exception to DomainError if
         retries exhausted.
         """
-        from domain_errors import DomainError
         from mixin_retry import RetryPolicy
+
+        from domain_errors import DomainError
 
         class TestError(DomainError):
             domain = "test"
@@ -301,8 +302,9 @@ class TestRealDepsIntegration:
 
     def test_stacked_retried_wrap_errors_exhaustion(self) -> None:
         """Stacked Retried+WrapErrors: retries exhausted -> ValueError wrapped to DomainError."""
-        from domain_errors import DomainError
         from mixin_retry import RetryPolicy
+
+        from domain_errors import DomainError
 
         class TestError(DomainError):
             domain = "test"
@@ -337,6 +339,7 @@ class TestRealDepsIntegration:
     def test_stacked_logged_retried_async(self) -> None:
         """Stacked Logged+Retried on async class method."""
         import asyncio
+
         from mixin_logging import LoggingMixin
         from mixin_retry import RetryPolicy
 
@@ -368,8 +371,6 @@ class TestRealDepsIntegration:
 
     def test_retried_selector_none_passthrough_class(self) -> None:
         """Retried with policy_from_request=None on class: single-attempt passthrough."""
-        from mixin_retry import RetryPolicy
-
         calls = {"n": 0}
 
         @aspects(
